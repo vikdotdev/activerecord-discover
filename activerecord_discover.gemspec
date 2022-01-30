@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Viktor Habchak"]
   spec.email       = ["vikdotdev@gmail.com"]
   spec.homepage    = "https://github.com/vikdotdev/activerecord-discover"
-  spec.summary     = "Discover your active record models from the comfort of cli/rails console."
-  spec.description = "Discover your active record models from the comfort of cli/rails console."
+  spec.summary     = "Discover your ActiveRecord models."
+  spec.description = "Print a detailed report of your ActiveRecord models with cli/rails console."
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -26,10 +26,9 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   spec.test_files = Dir["spec/**/*"]
 
-  spec.add_dependency "rails", "~> 5.2.6"
-  spec.add_dependency "parser"
+  spec.add_dependency "rails", "~> 6"
   spec.add_dependency "unparser"
-  # spec.add_dependency "ffast"
+  spec.add_dependency "ffast"
 
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-byebug"

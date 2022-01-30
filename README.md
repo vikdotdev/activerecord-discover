@@ -34,3 +34,27 @@ Then associations
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## TODO
+has_many depending: :destroy adds callbacks? display those?
+display gem callbacks?
+what to do when class is reopened?
+what to do method definitions are both in class and concern
+test ast_callback with a bunch of unrelated code
+handle no callbacks present, nils etc
+discover all possible callback options
+can on: have lambdas??? - probably no
+add arbitrary methods with method_missing -> before_save_and_after_create
+only for ruby 2.7
+Module.const_source_location('Generic')
+
+add calls that resemble callbacks but are not
+```
+  class << self
+    def after_hello(var)
+    end
+  end
+
+  after_hello :after_rollback_as_method
+```
+monkey-patch ActiveRecord::Base class to include method for print

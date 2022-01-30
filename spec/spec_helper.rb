@@ -8,49 +8,57 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
 end
 
-RSpec::Matchers.define :a_callback_of_a_kind do |expected|
+RSpec::Matchers.define :match_callback_ast do
+  match { |actual| actual.match? }
+end
+
+RSpec::Matchers.define :match_method_callback_ast do
+  match { |actual| actual.method? }
+end
+
+RSpec::Matchers.define :match_proc_callback_ast do
+  match { |actual| actual.proc? }
+end
+
+RSpec::Matchers.define :ast_callback do
   match do |actual|
-    actual.kind == expected
+    actual.is_a?(ActiveRecordDiscover::ASTCallback)
+  end
+end
+RSpec::Matchers.alias_matcher :an_ast_callback, :ast_callback
+
+RSpec::Matchers.define :path_asts_pair do
+  match do |actual|
+    path, asts = actual
+
+    File.exist?(path) && asts.all? { |ast| ast.is_a?(ActiveRecordDiscover::ASTCallback) }
   end
 end
 
-RSpec::Matchers.define :a_callback_of_a_name do |expected|
+RSpec::Matchers.define :asts_matching do |expected|
   match do |actual|
-    actual.name == expected
+    _, asts = actual
+
+    asts.all? { |ast| ast.is_a?(Fast::Node) }
   end
 end
 
-RSpec::Matchers.define :a_callback_including_if do |expected|
+RSpec::Matchers.define :callback_of_kind do |expected|
   match do |actual|
-    Array.wrap(expected).map { |item| actual.ifs.include? item }.all?
+    _, asts = actual
+
+    asts.all? do |ast|
+      ast_callback(ast) && ast.kind.ends_with?(expected.to_s)
+    end
   end
 end
 
-# gotcha, need a splat for multiple params here
-RSpec::Matchers.define :a_callback_including_symbolic_if do |*expected|
+RSpec::Matchers.define :callback_of_name do |expected|
   match do |actual|
-    Array.wrap(expected).map { |item| actual.symbolic_ifs.include? item }.all?
+    _, ast_callbacks = actual
+
+    ast_callbacks.all? do |ast|
+      an_ast_callback(ast) && ast.name.ends_with?(expected.to_s)
+    end
   end
 end
-
-RSpec::Matchers.define :callback_including_proc_source do |*expected|
-  match do |actual|
-    Array.wrap(expected).map do |item|
-      actual.proc_ifs.map { |if_cond| if_cond.source.include? item }.any?
-    end.all?
-  end
-end
-
-# RSpec::Matchers.define :callback_including_proc_source do |*expected|
-#   match do |actual|
-#     Array.wrap(expected).map do |item|
-#       actual.proc_ifs.map { |if_cond| if_cond.source.include? item }.any?
-#     end.all?
-#   end
-# end
-
-# RSpec::Matchers.define :a_callback_of_type do |expected|
-#   match do |actual|
-#     actual.name == expected
-#   end
-# end

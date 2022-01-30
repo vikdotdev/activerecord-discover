@@ -1,4 +1,4 @@
-class AllCallbacks < ApplicationRecord
+class Simple < ApplicationRecord
   # Initialize
   after_initialize :after_initialize_as_method
   def after_initialize_as_method; end
@@ -12,7 +12,6 @@ class AllCallbacks < ApplicationRecord
   def after_find_as_method; end
 
   after_find -> do
-    yield
   end
 
   # Touch
@@ -20,7 +19,6 @@ class AllCallbacks < ApplicationRecord
   def after_touch_as_method; end
 
   after_touch -> do
-    yield
   end
 
   # Validation
@@ -51,7 +49,6 @@ class AllCallbacks < ApplicationRecord
   def after_save_as_method; end
 
   after_save -> do
-    yield
   end
 
   # Create
@@ -72,7 +69,6 @@ class AllCallbacks < ApplicationRecord
   def after_create_as_method; end
 
   after_create -> do
-    yield
   end
 
   # Update
@@ -122,13 +118,11 @@ class AllCallbacks < ApplicationRecord
   def after_commit_as_method; end
 
   after_commit -> do
-    yield
   end
 
   after_rollback :after_rollback_as_method
   def after_rollback_as_method; end
 
   after_rollback -> do
-    yield
   end
 end

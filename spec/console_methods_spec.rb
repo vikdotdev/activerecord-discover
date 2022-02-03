@@ -4,11 +4,11 @@ RSpec.describe 'Console methods' do
   include ActiveRecordDiscover::ConsoleMethods
 
   let!(:callback_list_class) { ActiveRecordDiscover::CallbackList }
-  let!(:model) { AllCallbacks }
+  let!(:model) { Simple }
 
   describe 'all callbacks' do
     it 'calls CallbackList.all' do
-      expect(callback_list_class).to receive(:all).with(model)
+      expect(callback_list_class).to receive(:filter).with(model)
       discover_callbacks_of(model)
     end
   end
@@ -19,13 +19,13 @@ RSpec.describe 'Console methods' do
 
       context "when name #{name}" do
         it 'calls CallbackList.all' do
-          expect(callback_list_class).to receive(:all).with(model, name: name)
+          expect(callback_list_class).to receive(:filter).with(model, name: name)
           public_send("discover_#{name}_callbacks_of", model)
         end
 
         describe "of kind #{kind}" do
           it 'calls CallbackList.all' do
-            expect(callback_list_class).to receive(:all).with(model, name: name, kind: kind)
+            expect(callback_list_class).to receive(:filter).with(model, name: name, kind: kind)
             public_send("discover_#{kind}_#{name}_callbacks_of", model)
           end
         end
@@ -38,7 +38,7 @@ RSpec.describe 'Console methods' do
 
     context "when entity #{entity}" do
       it "calls .all on #{list_class}" do
-        expect(list_class).to receive(:all).with(model)
+        expect(list_class).to receive(:filter).with(model)
         public_send("discover_#{entity.to_s.pluralize}_of", model)
       end
     end

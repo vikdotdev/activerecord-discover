@@ -1,13 +1,7 @@
 module ActiveRecordDiscover
   class ASTCallback
-    attr_accessor :ast
-
-    def self.from_string(string)
-      new(Fast.ast(string))
-    end
-
     def self.from_file(path, &block)
-      Fast.search_file(callback_pattern, path).map do |ast|
+      Fast.search_file(is_callback_pattern, path).map do |ast|
         ast_callback = new(ast)
         matches = yield(ast_callback) if block_given?
 
@@ -17,24 +11,56 @@ module ActiveRecordDiscover
       end.compact.uniq
     end
 
+    attr_accessor :ast
+
     def initialize(ast)
       @ast = ast
     end
 
     def match?
-      Fast.match?(self.class.callback_pattern, ast)
+      Fast.match?(self.class.is_callback_pattern, ast)
     end
 
     def method?
-      Fast.match?(self.class.method_pattern, ast)
+      pattern = <<-PATTERN
+        (send nil { #{self.class.existing_callbacks} }
+          (sym _))
+      PATTERN
+
+      Fast.match?(pattern, ast)
     end
 
     def method_name
-      # ... implement a method that is going to fetch callback method source
+      return unless method?
+
+      pattern = <<-PATTERN
+        (send nil { #{self.class.existing_callbacks} }
+          (sym $_))
+      PATTERN
+
+      Fast.capture(pattern,  ast)&.first
+    end
+
+    def conditions_method_names
+      Fast.capture('$(hash ...)', ast).map do |node|
+        node.children.map do |child|
+          key_ast, conditions_ast = child.children
+
+          if Fast.match?('(sym { if unless })', key_ast) &&
+            conditions = Fast.capture('(sym $_)', conditions_ast)
+            conditions
+          end
+        end
+      end.flatten.compact
     end
 
     def proc?
-      Fast.match?(self.class.proc_pattern, ast)
+      pattern = <<-PATTERN
+        (send nil { #{self.class.existing_callbacks} }
+          (block ...))
+      PATTERN
+
+      Fast.match?(pattern, ast)
     end
 
     def name
@@ -45,7 +71,7 @@ module ActiveRecordDiscover
       Fast.capture('(send nil $_)', ast).first.to_s.split('_').first.to_s
     end
 
-    def self.callback_pattern
+    def self.is_callback_pattern
       <<-PATTERN
         (send nil { #{existing_callbacks} }
           ({ block sym } { _ ...})
@@ -56,26 +82,8 @@ module ActiveRecordDiscover
       PATTERN
     end
 
-    def self.method_pattern
-      <<-PATTERN
-        (send nil { #{existing_callbacks} }
-          (sym _))
-      PATTERN
-    end
-
-    def self.proc_pattern
-      <<-PATTERN
-        (send nil { #{existing_callbacks} }
-          (block ...))
-      PATTERN
-    end
-
     def self.existing_callbacks
       ActiveRecord::Callbacks::CALLBACKS.join(' ')
-    end
-
-    def self.existing_kinds
-      ActiveSupport::Callbacks::CALLBACK_FILTER_TYPES.join(' ')
     end
   end
 end

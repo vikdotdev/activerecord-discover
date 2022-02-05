@@ -14,7 +14,7 @@ module ActiveRecordDiscover
 
     def find
       if method? && model.instance_methods.include?(filter)
-        model.instance_method(filter).source_location.first
+        model.instance_method(filter)&.source_location&.first
       elsif proc?
         filter.source_location.first
       end

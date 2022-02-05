@@ -1,5 +1,5 @@
 module ActiveRecordDiscover
-  class CallbackPrinter
+  class BasePrinter
     def self.print(formatted_callbacks)
       new(formatted_callbacks).print
     end
@@ -18,7 +18,7 @@ module ActiveRecordDiscover
         puts callback[:path] unless current_path == callback[:path]
         current_path = callback[:path]
 
-        puts callback.dig(:source, :highlighted_with_numbers)
+        puts callback[:source]
         puts
       end
 

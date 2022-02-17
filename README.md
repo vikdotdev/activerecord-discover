@@ -29,6 +29,8 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
+- setup automatic push to RubyGems and Github actions to run specs
+- add automatic version increment with Fast
 - Handle cases when there are no callbacks
 - Test for callbacks from STI
 - Add threshold option to truncate long methods

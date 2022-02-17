@@ -4,11 +4,12 @@ class Simple < ApplicationRecord
   def after_initialize_as_method; end
 
   after_initialize -> do
-    yield
+    1 + 1 == 2
   end
 
   # Find
   after_find :after_find_as_method
+
   def after_find_as_method; end
 
   after_find -> do
@@ -16,7 +17,10 @@ class Simple < ApplicationRecord
 
   # Touch
   after_touch :after_touch_as_method
-  def after_touch_as_method; end
+
+  def after_touch_as_method
+    1 + 1 == 2
+  end
 
   after_touch -> do
   end
@@ -33,7 +37,9 @@ class Simple < ApplicationRecord
 
   # Save
   before_save :before_save_as_method
-  def before_save_as_method; end
+  def before_save_as_method
+    1 + 1 == 2
+  end
 
   before_save -> do
   end
@@ -121,7 +127,10 @@ class Simple < ApplicationRecord
   end
 
   after_rollback :after_rollback_as_method
-  def after_rollback_as_method; end
+
+  def after_rollback_as_method;
+    1 + 2
+  end
 
   after_rollback -> do
   end

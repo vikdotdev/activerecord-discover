@@ -17,38 +17,37 @@ RSpec::Matchers.define :ast_callback do
 end
 RSpec::Matchers.alias_matcher :an_ast_callback, :ast_callback
 
-RSpec::Matchers.define :path_asts_pair do
+RSpec::Matchers.define :ast_callback_metadata do
   match do |actual|
-    path, asts = actual
-
-    File.exist?(path) && asts.all? { |ast| ast.is_a?(ActiveRecordDiscover::ASTCallback) }
+    actual.all? { |metadata| metadata.is_a?(ActiveRecordDiscover::ASTCallbackMetadata) }
   end
 end
 
-RSpec::Matchers.define :asts_matching do |expected|
+RSpec::Matchers.define :ast_callback_metadata_with_callback_of_kind do |expected|
   match do |actual|
-    _, asts = actual
-
-    asts.all? { |ast| ast.is_a?(Fast::Node) }
-  end
-end
-
-RSpec::Matchers.define :callback_of_kind do |expected|
-  match do |actual|
-    _, asts = actual
-
-    asts.all? do |ast|
+    actual.map { |metadata| metadata.callback }.all? do |ast|
       ast_callback(ast) && ast.kind.ends_with?(expected.to_s)
     end
   end
 end
 
-RSpec::Matchers.define :callback_of_name do |expected|
+RSpec::Matchers.define :ast_callback_metadata_with_callback_of_name do |expected|
   match do |actual|
-    _, ast_callbacks = actual
-
-    ast_callbacks.all? do |ast|
+    actual.map { |metadata| metadata.callback }.all? do |ast|
       an_ast_callback(ast) && ast.name.ends_with?(expected.to_s)
     end
   end
 end
+
+RSpec::Matchers.define :ast_callback_with_condition_methods do |*expected|
+  match do |actual|
+    an_ast_callback(actual) &&
+      actual.conditions_method_names.uniq.map(&:to_sym).sort == expected.uniq.map(&:to_sym).sort
+  end
+
+  failure_message do |actual|
+    "Expected #{actual.conditions_method_names.map(&:to_sym)} to equal #{expected}, when callback code is #{code.inspect}"
+  end
+end
+RSpec::Matchers.alias_matcher :be_an_ast_callback_with_condition_methods,
+                              :ast_callback_with_condition_methods

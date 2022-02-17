@@ -6,24 +6,20 @@ RSpec.describe ActiveRecordDiscover::CallbackList do
       subject { described_class.filter(model) }
 
       it { is_expected.to be_an(Array) }
-      it { is_expected.to include(path_asts_pair) }
+      it { is_expected.to include(ast_callback_metadata) }
 
       # TODO: test when no kind or no name
-      ActiveSupport::Callbacks::CALLBACK_FILTER_TYPES.each do |kind|
-        ActiveRecordDiscover::CALLBACK_NAMES.each do |name|
-          next unless ActiveRecord::Callbacks::CALLBACKS.include?("#{kind}_#{name}".to_sym)
+      ActiveRecordDiscover::Permutator.callback_pairs.map do |kind, name|
+        context "when name #{name}" do
+          subject { described_class.filter(model, name: name) }
 
-          context "when name #{name}" do
-            subject { described_class.filter(model, name: name) }
+          it { is_expected.to include(ast_callback_metadata_with_callback_of_name(name)) }
 
-            it { is_expected.to include(callback_of_name(name)) }
+          describe "of kind #{kind}" do
+            subject { described_class.filter(model, kind: kind, name: name) }
 
-            describe "of kind #{kind}" do
-              subject { described_class.filter(model, kind: kind, name: name) }
-
-              it { is_expected.to include(callback_of_kind(kind)) }
-              it { is_expected.to include(callback_of_name(name)) }
-            end
+            it { is_expected.to include(ast_callback_metadata_with_callback_of_kind(kind)) }
+            it { is_expected.to include(ast_callback_metadata_with_callback_of_name(name)) }
           end
         end
       end

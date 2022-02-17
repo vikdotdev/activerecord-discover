@@ -35,9 +35,27 @@ class WithOption < ApplicationRecord
   before_validation -> do
   end, on: :create
 
-  after_validation :after_validation_as_method, on: %i[:create]
+  after_validation :after_validation_as_method, on: %i[create]
   def after_validation_as_method; end
 
   after_validation -> do
-  end, on: %i[:create]
+  end, on: %i[create]
+
+  # Save
+  before_validation :before_validation_as_method,
+    on: %i[create update],
+    if: %i[yes? yes?],
+    unless: %i[no? no?]
+
+  before_validation :before_validation_as_method,
+    on: :destroy,
+    unless: %i[no? no?],
+    if: %i[yes? yes?]
+
+  def before_save_as_method;
+    1 + 1 == 2
+  end
+
+  before_validation -> do
+  end, on: :destroy, unless: :no?, if: :yes?
 end

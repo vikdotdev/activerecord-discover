@@ -17,15 +17,29 @@ module ActiveRecordDiscover
         ActiveRecordDiscover::CallbackSourceLocation.find(callback_chain, model)
       end.compact.uniq
 
+      LineNumberConfiguration.reset
+      LineNumberConfiguration.from_paths(paths)
+
       paths.map do |path|
-        callbacks = ASTCallback.from_file(path) do |ast_callback|
+        ast_callbacks = ASTCallback.from_file(path) do |ast_callback|
           (kind.nil? || ast_callback.kind == kind.to_s) &&
             (name.nil? || ast_callback.name == name.to_s)
         end
 
-        [path, callbacks]
+        ast_callbacks.map do |ast_callback|
+          ASTCallbackMetadata.new(
+            ast_callback,
+            path: path,
+            ast_method: ASTMethod.from(model, by_name: ast_callback.method_name),
+            ast_condition_methods: ast_callback.conditions_method_names.map do |method_name|
+              ASTMethod.from(model, by_name: method_name)
+            end.uniq { |method| method.ast }
+          )
+        end.flatten
       end
     end
+
+    private
 
     def callback_chains
       model.__callbacks.to_a.map do |callback_chain|

@@ -1,12 +1,12 @@
 module ActiveRecordDiscover
-  class WithHighlightingFormatter < BaseFormatter
-    def format
-      with_syntax_highlight(@component.format)
+  class HighlightingFormatter
+    attr_reader :source
+
+    def initialize(source)
+      @source = source
     end
 
-    private
-
-    def with_syntax_highlight(source)
+    def format
       theme = Rouge::Themes::ThankfulEyes.new
       formatter = Rouge::Formatters::TerminalTruecolor.new(theme)
       lexer = Rouge::Lexers::Ruby.new

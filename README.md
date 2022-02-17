@@ -24,37 +24,31 @@ $ gem install activerecord-discover
 ## Contributing
 Contribution directions go here.
 
-## Developer notes
-Figure out the terminology for callback data structures.
-Add spec structures for all callback types/kinds
-Start with save callbacks
-Do the rest of callbacks
-Then validations
-Then associations
-
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
-## TODO
-has_many depending: :destroy adds callbacks? display those?
-display gem callbacks?
-what to do when class is reopened?
-what to do method definitions are both in class and concern
-test ast_callback with a bunch of unrelated code
-handle no callbacks present, nils etc
-discover all possible callback options
-can on: have lambdas??? - probably no
-add arbitrary methods with method_missing -> before_save_and_after_create
-only for ruby 2.7
-Module.const_source_location('Generic')
-
-add calls that resemble callbacks but are not
+## Developer notes
+### TODO
+- Handle cases when there are no callbacks
+- Test for callbacks from STI
+- Add threshold option to truncate long methods
+- Test calls that resemble callbacks but are not
 ```
   class << self
-    def after_hello(var)
-    end
+    def after_hello(var); end
   end
 
   after_hello :after_rollback_as_method
 ```
-monkey-patch ActiveRecord::Base class to include method for print
+
+### Open questions & issues
+- What happens when class is re-opened?
+- What happens when method with same name are both in in class and in concern?
+
+### Ideas & Thoughts
+- Print actual source with `target.ast.loc.expression.source` instead of unparsing
+- Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
+Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
+- Display system callbacks? E.g. `has_many depending: :destroy`;
+- Display gem callbacks?
+- Adapt gem to be compatible with ActiveRecord without Rails?

@@ -19,37 +19,37 @@ module ActiveRecordDiscover
 
     def format_print
       metadata_list.each do |metadata|
-        source_with_data = metadata.printable_targets.map do |target|
+        pairs = metadata.printable_targets.map do |target|
           source = Unparser.unparse(target.ast)
           source = HighlightingFormatter.new(source).format if colors_enabled?
-          source = LineNumbersFormatter.new(source, target.ast, metadata.path).format if line_numbers_enabled?
+          source = LineNumbersFormatter.new(source, target.ast, path(target)).format if line_numbers_enabled?
 
-          [source, target, metadata]
+          [source, target]
         end
 
-        print(source_with_data)
+        print(pairs)
       end
     end
 
     private
 
-    def print(items)
+    def print(pairs)
       puts
       current_path = nil
-      items.each do |item|
-        source, target, metadata = item
+      pairs.each do |pair|
+        source, target = pair
 
-        if print_path?(current_path, metadata.path)
-          header = "#{line_numbers_enabled? ? "| #{padded_line_number_arrow} | " : ''}#{path(metadata)}"
+        if print_path?(current_path, path(target))
+          header = "#{line_numbers_enabled? ? "| #{padded_line_number_arrow} | " : ''}#{format_path(target)}"
           header = header.light_black if colors_enabled?
           puts header
         end
 
-        current_path = metadata.path
+        current_path = path(target)
 
         puts source
 
-        if print_separator?(items, item)
+        if print_separator?(pairs, pair)
           separator = line_numbers_enabled? ? "| #{padded_line_number_dots} |" : ''
           separator = separator.light_black if colors_enabled?
           puts separator
@@ -57,12 +57,20 @@ module ActiveRecordDiscover
       end
     end
 
-    def path(metadata)
+    def path(target)
+      target.ast.location.expression.source_buffer.name
+    end
+
+    def format_path(target)
       if show_full_path?
-        metadata.path
+        path(target)
       else
-        Pathname.new(metadata.path).relative_path_from(Rails.root)
+        Pathname.new(path(target)).relative_path_from(Rails.root)
       end
+    end
+
+    def next_target(pairs, current)
+      items[items.find_index(current) + 1].last
     end
 
     def print_separator?(items, current)

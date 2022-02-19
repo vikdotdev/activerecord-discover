@@ -1,11 +1,5 @@
 class WithOption < ApplicationRecord
-  def yes?
-    true
-  end
-
-  def no?
-    false
-  end
+  include Conditions
 
   # Initialize
   after_initialize :after_initialize_as_method, if: :yes?, unless: :no?

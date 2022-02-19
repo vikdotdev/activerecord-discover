@@ -1,0 +1,2 @@
+class NoCallback < ApplicationRecord
+end

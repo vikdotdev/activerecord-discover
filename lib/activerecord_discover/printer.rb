@@ -4,6 +4,8 @@ module ActiveRecordDiscover
     include LineNumberHelper
 
     def self.print(metadata_list)
+      puts "No callbacks found" if metadata_list.empty?
+
       metadata_list.each do |metadata|
         new(metadata_list.flatten).format_print
       end

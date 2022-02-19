@@ -13,9 +13,8 @@ module ActiveRecordDiscover
     end
 
     def run
-      paths = callback_chains.map do |callback_chain|
-        ActiveRecordDiscover::CallbackSourceLocation.find(callback_chain, model)
-      end.compact.uniq
+      paths = CallbackSourceLocation.paths(model)
+
 
       LineNumberConfiguration.reset
       LineNumberConfiguration.from_paths(paths)

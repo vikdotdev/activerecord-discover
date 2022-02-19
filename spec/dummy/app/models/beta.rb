@@ -1,4 +1,4 @@
-# Is intended for testing all combinations of if:, unless: and on: options
+# Is intended for testing combinations of if:, unless: and on: options
 class Beta < ApplicationRecord
   include Conditions
 

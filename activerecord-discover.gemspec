@@ -1,7 +1,7 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "activerecord_discover/version"
+require "activerecord-discover/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   spec.test_files = Dir["spec/**/*"]
 
-  spec.add_dependency "rails", "~> 6"
+  spec.add_dependency "rails"
   spec.add_dependency "unparser"
   spec.add_dependency "ffast"
   spec.add_dependency "rouge"

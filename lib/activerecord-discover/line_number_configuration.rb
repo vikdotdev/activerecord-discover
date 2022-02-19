@@ -16,7 +16,7 @@ module ActiveRecordDiscover
       self.config ||= LineNumberConfiguration.new
 
       config.size ||= paths.map do |path|
-        [File.open(path).lines.count.to_s.size, MIN_PADDING].max
+        [File.open(path).each_line.count.to_s.size, MIN_PADDING].max
       end.max
     end
   end

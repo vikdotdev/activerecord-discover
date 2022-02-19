@@ -19,13 +19,13 @@ RSpec::Matchers.alias_matcher :an_ast_callback, :ast_callback
 
 RSpec::Matchers.define :ast_callback_metadata do
   match do |actual|
-    actual.all? { |metadata| metadata.is_a?(ActiveRecordDiscover::ASTCallbackMetadata) }
+    actual.flatten.present? && actual.all? { |metadata| metadata.is_a?(ActiveRecordDiscover::ASTCallbackMetadata) }
   end
 end
 
 RSpec::Matchers.define :ast_callback_metadata_with_callback_of_kind do |expected|
   match do |actual|
-    actual.map { |metadata| metadata.callback }.all? do |ast|
+    actual.flatten.present? && actual.map { |metadata| metadata.callback }.all? do |ast|
       ast_callback(ast) && ast.kind.ends_with?(expected.to_s)
     end
   end
@@ -33,7 +33,7 @@ end
 
 RSpec::Matchers.define :ast_callback_metadata_with_callback_of_name do |expected|
   match do |actual|
-    actual.map { |metadata| metadata.callback }.all? do |ast|
+    actual.flatten.present? && actual.map { |metadata| metadata.callback }.all? do |ast|
       an_ast_callback(ast) && ast.name.ends_with?(expected.to_s)
     end
   end

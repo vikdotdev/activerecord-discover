@@ -51,5 +51,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 - Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
 Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
 - Display system callbacks? E.g. `has_many depending: :destroy`;
+- Test display of just custom callbacks when those system callbacks are present;
 - Display gem callbacks?
 - Adapt gem to be compatible with ActiveRecord without Rails?

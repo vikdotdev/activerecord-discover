@@ -9,5 +9,9 @@ module Conditions
     def no?
       false
     end
+
+    def maybe?
+      [true, false].sample
+    end
   end
 end

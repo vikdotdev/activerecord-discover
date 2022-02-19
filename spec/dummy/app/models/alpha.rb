@@ -1,4 +1,5 @@
-class Simple < ApplicationRecord
+# Is intended for testing all callback types
+class Alpha < ApplicationRecord
   # Initialize
   after_initialize :after_initialize_as_method
   def after_initialize_as_method; end

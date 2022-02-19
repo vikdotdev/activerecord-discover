@@ -4,7 +4,7 @@ RSpec.describe 'Console methods' do
   include ActiveRecordDiscover::ConsoleMethods
 
   let!(:callback_list_class) { ActiveRecordDiscover::CallbackList }
-  let!(:model) { Simple }
+  let!(:model) { Alpha }
 
   xdescribe 'all callbacks' do
     it 'calls CallbackList.all' do

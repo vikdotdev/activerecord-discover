@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ActiveRecordDiscover::CallbackList do
   describe 'all callbacks' do
-    [Simple, WithOption].each do |model|
+    [Alpha, Beta].each do |model|
       subject { described_class.filter(model) }
 
       it { is_expected.to be_an(Array) }

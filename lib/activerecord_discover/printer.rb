@@ -6,29 +6,27 @@ module ActiveRecordDiscover
     def self.print(metadata_list)
       puts "No callbacks found" if metadata_list.empty?
 
-      metadata_list.each do |metadata|
-        new(metadata_list.flatten).format_print
+      metadata_list.flatten.each do |metadata|
+        new(metadata).format_print
       end
     end
 
-    attr_reader :metadata_list
+    attr_reader :metadata
 
-    def initialize(metadata_list)
-      @metadata_list = metadata_list
+    def initialize(metadata)
+      @metadata = metadata
     end
 
     def format_print
-      metadata_list.each do |metadata|
-        pairs = metadata.printable_targets.map do |target|
-          source = Unparser.unparse(target.ast)
-          source = HighlightingFormatter.new(source).format if colors_enabled?
-          source = LineNumbersFormatter.new(source, target.ast, path(target)).format if line_numbers_enabled?
+      pairs = metadata.printable_targets.map do |target|
+        source = Unparser.unparse(target.ast)
+        source = HighlightingFormatter.new(source).format if colors_enabled?
+        source = LineNumbersFormatter.new(source, target.ast, path(target)).format if line_numbers_enabled?
 
-          [source, target]
-        end
-
-        print(pairs)
+        [source, target]
       end
+
+      print(pairs)
     end
 
     private
@@ -78,7 +76,8 @@ module ActiveRecordDiscover
       _, next_target = items[items.find_index(current) + 1]
 
       items.last != current &&
-        current_target.ast.loc.last_line + 1 != next_target.ast.loc.first_line
+        (path(current_target) != path(next_target) ||
+         current_target.ast.loc.last_line + 1 != next_target.ast.loc.first_line)
     end
 
     def print_path?(previous, current)

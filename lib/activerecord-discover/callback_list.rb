@@ -13,9 +13,8 @@ module ActiveRecordDiscover
     end
 
     def run
-      paths = callback_chains.map do |callback_chain|
-        ActiveRecordDiscover::CallbackSourceLocation.find(callback_chain, model)
-      end.compact.uniq
+      paths = CallbackSourceLocation.paths(model)
+
 
       LineNumberConfiguration.reset
       LineNumberConfiguration.from_paths(paths)
@@ -29,7 +28,6 @@ module ActiveRecordDiscover
         ast_callbacks.map do |ast_callback|
           ASTCallbackMetadata.new(
             ast_callback,
-            path: path,
             ast_method: ASTMethod.from(model, by_name: ast_callback.method_name),
             ast_condition_methods: ast_callback.conditions_method_names.map do |method_name|
               ASTMethod.from(model, by_name: method_name)

@@ -29,11 +29,11 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
+- test include that is not a concern
 - setup automatic push to RubyGems and Github actions to run specs
 - add automatic version increment with Fast
-- Handle cases when there are no callbacks
-- Test for callbacks from STI
 - Add threshold option to truncate long methods
+- Validate that passed class is a model
 - Test calls that resemble callbacks but are not
 ```
   class << self
@@ -45,12 +45,13 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ### Open questions & issues
 - What happens when class is re-opened?
-- What happens when method with same name are both in in class and in concern?
 
 ### Ideas & Thoughts
 - Print actual source with `target.ast.loc.expression.source` instead of unparsing
 - Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
 Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
 - Display system callbacks? E.g. `has_many depending: :destroy`;
+- Test display of just custom callbacks when those system callbacks are present;
 - Display gem callbacks?
 - Adapt gem to be compatible with ActiveRecord without Rails?
+- Display entities for concerns as well

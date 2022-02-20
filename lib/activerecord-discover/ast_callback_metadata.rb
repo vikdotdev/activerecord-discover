@@ -1,12 +1,11 @@
 module ActiveRecordDiscover
   class ASTCallbackMetadata
-    attr_reader :callback, :path, :method, :condition_methods
+    attr_reader :callback, :method, :condition_methods
 
-    def initialize(ast_callback, path:, ast_method: nil, ast_condition_methods: nil)
+    def initialize(ast_callback, ast_method: nil, ast_condition_methods: nil)
       @callback = ast_callback
       @method = ast_method
       @condition_methods = ast_condition_methods
-      @path = path
     end
 
     def printable_targets

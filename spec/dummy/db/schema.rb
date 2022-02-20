@@ -11,9 +11,4 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2022_01_28_161802) do
-
-  create_table "all_callbacks", force: :cascade do |t|
-    t.string "example"
-  end
-
 end

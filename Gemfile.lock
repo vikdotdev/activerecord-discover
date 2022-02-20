@@ -4,7 +4,7 @@ PATH
     activerecord-discover (0.1.0)
       colorize
       ffast
-      rails (~> 6)
+      rails
       rouge
       unparser
 

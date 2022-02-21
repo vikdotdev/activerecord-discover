@@ -1,4 +1,4 @@
-require 'active_record'
+# require 'active_record'
 module ActiveRecordDiscover
   class Permutator
     def self.callback_pairs

@@ -23,7 +23,7 @@ module ActiveRecordDiscover
       pairs = metadata.printable_targets.map do |target|
         source = Unparser.unparse(target.ast)
         source = HighlightingFormatter.new(source).format if colors_enabled?
-        source = LineNumbersFormatter.new(source, target.ast, path(target)).format if line_numbers_enabled?
+        source = LineNumbersFormatter.new(source, target.ast).format if line_numbers_enabled?
 
         [source, target]
       end
@@ -39,26 +39,25 @@ module ActiveRecordDiscover
       pairs.each do |pair|
         source, target = pair
 
-        if print_path?(current_path, path(target))
-          header = "#{line_numbers_enabled? ? "| #{padded_line_number_arrow} | " : ''}#{format_path(target)}"
-          header = header.light_black if colors_enabled?
-          puts header
+        if print_header?(current_path, path(target))
+          print_header(format_path(target))
+        elsif method_blank?(target)
+          print_header(
+            "Could not find source for #{target.name} method.",
+            padded_line_number_error
+          )
         end
 
         current_path = path(target)
 
         puts source
 
-        if print_separator?(pairs, pair)
-          separator = line_numbers_enabled? ? "| #{padded_line_number_dots} |" : ''
-          separator = separator.light_black if colors_enabled?
-          puts separator
-        end
+        print_separator if print_separator?(pairs, pair)
       end
     end
 
     def path(target)
-      target.ast.location.expression.source_buffer.name
+      target.ast&.location&.expression&.source_buffer&.name
     end
 
     def format_path(target)
@@ -82,8 +81,28 @@ module ActiveRecordDiscover
          current_target.ast.loc.last_line + 1 != next_target.ast.loc.first_line)
     end
 
-    def print_path?(previous, current)
+    def print_separator(symbol = nil)
+      symbol ||= padded_line_number_dots
+      separator = line_numbers_enabled? ? "| #{symbol} |" : ''
+      separator = separator.light_black if colors_enabled?
+      puts separator
+    end
+
+    def print_header?(previous, current)
+      return false if current.nil?
+
       previous != current
+    end
+
+    def print_header(text, symbol = nil)
+      symbol ||= padded_line_number_arrow
+      header = "#{line_numbers_enabled? ? "| #{symbol} | " : ''}#{text}"
+      header = header.light_black if colors_enabled?
+      puts header
+    end
+
+    def method_blank?(target)
+      target.is_a?(ASTMethod) && target.blank?
     end
   end
 end

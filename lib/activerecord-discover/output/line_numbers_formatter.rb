@@ -5,12 +5,14 @@ module ActiveRecordDiscover
 
     attr_reader :source, :ast
 
-    def initialize(source, ast, path)
+    def initialize(source, ast)
       @source = source
       @ast = ast
     end
 
     def format
+      return source if ast.nil?
+
       first, last = line_numbers_for(ast)
       current = first
 

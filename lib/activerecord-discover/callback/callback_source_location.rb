@@ -21,9 +21,13 @@ module ActiveRecordDiscover
       application_includes = includes.select { |ancestor| ancestor.instance_of?(Module) }
 
       application_includes.map do |ancestor|
-        path = source_location_of(ancestor)
+        begin
+          path = source_location_of(ancestor)
 
-        next unless path.include?(Rails.root.to_s)
+          next unless path.include?(Rails.root.to_s)
+        rescue NameError
+          next
+        end
 
         path
       end.compact

@@ -1,4 +1,9 @@
 def print_callbacks(model, kind: nil, name: nil)
+  unless model.ancestors.include?(ActiveRecord::Base)
+    puts "\"#{model}\" is not an ActiveRecord::Base ancestor."
+    return
+  end
+
   ActiveRecordDiscover::Printer.print(
     ActiveRecordDiscover::CallbackList.filter(model, kind: kind, name: name)
   )

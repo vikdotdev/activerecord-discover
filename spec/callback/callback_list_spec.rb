@@ -10,7 +10,7 @@ RSpec.describe ActiveRecordDiscover::CallbackList do
     it { is_expected.to include(ast_callback_metadata) }
 
     # TODO: test when no kind or no name
-    ActiveRecordDiscover::Permutator.callback_pairs.map do |kind, name|
+    ActiveRecordDiscover::PermutationHelper.callback_pairs.map do |kind, name|
       context "when name #{name}" do
         subject { described_class.filter(model, name: name) }
 

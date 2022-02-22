@@ -29,7 +29,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
-- When code is outside application, show full path
 
 ### Open questions & issues
 - What happens when class is re-opened?

@@ -2,6 +2,7 @@ module ActiveRecordDiscover
   class Printer
     include ConfigurationHelper
     include LineNumberHelper
+    include PathHelper
 
     def self.print(metadata_list)
       metadata_list = metadata_list.flatten
@@ -56,20 +57,8 @@ module ActiveRecordDiscover
       end
     end
 
-    def path(target)
-      target.ast&.location&.expression&.source_buffer&.name
-    end
-
-    def format_path(target)
-      if show_full_path?
-        path(target)
-      else
-        Pathname.new(path(target)).relative_path_from(Rails.root)
-      end
-    end
-
     def next_target(pairs, current)
-      items[items.find_index(current) + 1].last
+      pairs[pairs.find_index(current) + 1].last
     end
 
     def print_separator?(items, current)

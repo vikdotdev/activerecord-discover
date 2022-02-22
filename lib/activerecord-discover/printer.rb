@@ -2,12 +2,14 @@ module ActiveRecordDiscover
   class Printer
     include ConfigurationHelper
     include LineNumberHelper
+    include HighlightHelper
+    extend  HighlightHelper
     include PathHelper
 
     def self.print(metadata_list)
       metadata_list = metadata_list.flatten
 
-      puts "No callbacks found" if metadata_list.empty?
+      puts gray_colored("No callbacks found") if metadata_list.empty?
 
       metadata_list.each do |metadata|
         new(metadata).format_print
@@ -23,8 +25,8 @@ module ActiveRecordDiscover
     def format_print
       pairs = metadata.printable_targets.map do |target|
         source = Unparser.unparse(target.ast)
-        source = HighlightingFormatter.new(source).format if colors_enabled?
-        source = LineNumbersFormatter.new(source, target.ast).format if line_numbers_enabled?
+        source = highlight_format_source(source) if colors_enabled?
+        source = line_number_source(source, target.ast) if line_numbers_enabled?
 
         [source, target]
       end
@@ -73,8 +75,7 @@ module ActiveRecordDiscover
     def print_separator(symbol = nil)
       symbol ||= padded_line_number_dots
       separator = line_numbers_enabled? ? "| #{symbol} |" : ''
-      separator = separator.light_black if colors_enabled?
-      puts separator
+      puts gray_colored(separator)
     end
 
     def print_header?(previous, current)
@@ -86,8 +87,7 @@ module ActiveRecordDiscover
     def print_header(text, symbol = nil)
       symbol ||= padded_line_number_arrow
       header = "#{line_numbers_enabled? ? "| #{symbol} | " : ''}#{text}"
-      header = header.light_black if colors_enabled?
-      puts header
+      puts gray_colored(header)
     end
 
     def method_blank?(target)

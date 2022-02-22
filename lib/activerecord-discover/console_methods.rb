@@ -15,19 +15,19 @@ module ActiveRecordDiscover
   end
 
   module ConsoleMethods
-    Permutator.callback_pairs.map do |kind, name|
+    PermutationHelper.callback_pairs.map do |kind, name|
       define_method("discover_#{kind}_#{name}_callbacks_of") do |model|
         PrintWrapper.print(model, kind: kind, name: name)
       end
     end
 
-    Permutator.callback_kinds.map do |kind|
+    PermutationHelper.callback_kinds.map do |kind|
       define_method("discover_#{kind}_callbacks_of") do |model|
         PrintWrapper.print(model, kind: kind)
       end
     end
 
-    Permutator.callback_names.map do |name|
+    PermutationHelper.callback_names.map do |name|
       define_method("discover_#{name}_callbacks_of") do |model|
         PrintWrapper.print(model, name: name)
       end

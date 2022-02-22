@@ -29,20 +29,18 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
+- Add more specs and automatically test existing model scenarios
 
 ### Open questions & issues
-- What happens when class is re-opened?
 
 ### Ideas & Thoughts
 - Print actual source with `target.ast.loc.expression.source` instead of unparsing
 - Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
 Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
-- Display system callbacks? E.g. `has_many depending: :destroy`;
-- Test display of just custom callbacks when those system callbacks are present;
-- Display gem callbacks?
+- Optionally display system callbacks? E.g. `has_many dependent: :destroy` etc;
+- Optionally display gem callbacks?
 - Adapt gem to be compatible with ActiveRecord without Rails?
-- Display entities for concerns as well
-- add Pry paging support
+- Add Pry paging support
 - Setup automatic push to RubyGems and Github actions to run specs
 - Add automatic version increment with Fast
 - Make generator for initializer

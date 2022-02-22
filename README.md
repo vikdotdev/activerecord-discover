@@ -29,12 +29,9 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
-- test include that is not a concern
-- setup automatic push to RubyGems and Github actions to run specs
-- add automatic version increment with Fast
-- Add threshold option to truncate long methods
-- Validate that passed class is a model
+- Test include that is not a concern
 - Test calls that resemble callbacks but are not
+- When code is outside application, show full path
 ```
   class << self
     def after_hello(var); end
@@ -55,3 +52,9 @@ Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_af
 - Display gem callbacks?
 - Adapt gem to be compatible with ActiveRecord without Rails?
 - Display entities for concerns as well
+- add Pry paging support
+- Setup automatic push to RubyGems and Github actions to run specs
+- Add automatic version increment with Fast
+- Make generator for initializer
+- Add threshold option to truncate long methods
+- Include executable file, add .ardiscover dotfile with override options

@@ -35,6 +35,11 @@ module ActiveRecordDiscover
       "#{' ' * (padding_size - arrow.size)}#{arrow}"
     end
 
+    def padded_line_number_error
+      arrow = 'ERR'
+      "#{' ' * (padding_size - arrow.size)}#{arrow}"
+    end
+
     def padded_line_number(n)
       n.to_s.rjust(padding_size)
     end

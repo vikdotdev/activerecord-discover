@@ -29,16 +29,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Developer notes
 ### TODO
-- Test include that is not a concern
-- Test calls that resemble callbacks but are not
 - When code is outside application, show full path
-```
-  class << self
-    def after_hello(var); end
-  end
-
-  after_hello :after_rollback_as_method
-```
 
 ### Open questions & issues
 - What happens when class is re-opened?

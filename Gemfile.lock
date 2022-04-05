@@ -5,7 +5,7 @@ PATH
       colorize
       ffast
       rails
-      rouge
+      rouge (~> 3)
       unparser
 
 GEM

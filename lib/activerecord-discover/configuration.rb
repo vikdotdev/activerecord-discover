@@ -33,7 +33,7 @@ module ActiveRecordDiscover
   end
 
   class LineNumberConfiguration
-    MIN_PADDING = 3.freeze
+    MIN_PADDING = 3
 
     class << self
       attr_accessor :config

@@ -40,8 +40,8 @@ module ActiveRecordDiscover
       "#{' ' * (padding_size - symbol.size)}#{symbol}"
     end
 
-    def padded_line_number(n)
-      n.to_s.rjust(padding_size)
+    def padded_line_number(number)
+      number.to_s.rjust(padding_size)
     end
   end
 end

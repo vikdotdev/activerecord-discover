@@ -31,5 +31,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 - Print actual source with `target.ast.loc.expression.source` instead of unparsing
 - Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
 Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
-- Optionally display gem callbacks?
 - Adapt gem to be compatible with ActiveRecord without Rails?

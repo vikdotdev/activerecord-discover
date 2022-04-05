@@ -1,5 +1,5 @@
-require 'spec_matchers'
-require 'spec_squelch'
+require 'support/spec_matchers'
+require 'support/spec_squelch'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 

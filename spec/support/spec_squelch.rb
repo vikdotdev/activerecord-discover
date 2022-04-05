@@ -5,7 +5,7 @@ class PrintSquelch
     @@original_stdout = $stdout
 
     # Redirect stderr and stdout
-    null_path = File.join(File.dirname(__FILE__), 'log', 'null.txt')
+    null_path = File.join(File.dirname(__FILE__), '..', 'log', 'null.txt')
     File.open(null_path, 'a') { |f| f.truncate(0) } unless File.exist?(null_path)
 
     $stderr = File.new(null_path, 'w')

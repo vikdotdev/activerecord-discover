@@ -33,12 +33,9 @@ module ActiveRecordDiscover
       end
     end
 
-    # ENTITIES.each do |entity|
-    #   define_method("discover_#{entity}_of") do |model|
-    #     ActiveRecordDiscover::BaseFormatter.from_pairs(
-    #       "ActiveRecordDiscover::#{entity.to_s.singularize.capitalize}List".constantize.filter(model)
-    #     )
-    #   end
-    # end
+    # TODO remove once validations and associations are rolled out
+    define_method("discover_callbacks_of") do |model|
+      PrintWrapper.print(model)
+    end
   end
 end

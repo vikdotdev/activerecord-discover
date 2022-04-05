@@ -23,6 +23,24 @@ RSpec::Matchers.define :ast_callback_metadata do
   end
 end
 
+RSpec::Matchers.define :ast_callback_metadata_with_all_callbacks do
+  match do |actual|
+    pairs_found = actual.map do |metadata|
+      [metadata.callback.kind.to_sym, metadata.callback.name.to_sym]
+    end.uniq
+    ActiveRecordDiscover::PermutationHelper.callback_pairs == pairs_found
+  end
+
+  # does not work
+  # failure_message do |actual|
+  #   pairs_found = actual.map do |metadata|
+  #     [metadata.callback.kind.to_sym, metadata.callback.name.to_sym]
+  #   end.uniq
+  #   diff = ActiveRecordDiscover::PermutationHelper.callback_pairs - pairs_found
+  #   "Expected the list to include #{diff} but it didn't"
+  # end
+end
+
 RSpec::Matchers.define :ast_callback_metadata_with_callback_of_kind do |expected|
   match do |actual|
     actual.flatten.present? && actual.map { |metadata| metadata.callback }.all? do |ast|

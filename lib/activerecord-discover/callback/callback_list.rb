@@ -4,12 +4,15 @@ module ActiveRecordDiscover
       CallbackList.new(model, kind: kind, name: name).run
     end
 
-    attr_reader :model, :kind, :name
+    include Enumerable
+
+    attr_reader :model, :kind, :name, :items
 
     def initialize(model, kind: nil, name: nil)
       @model = model
       @kind = kind
       @name = name
+      @items = []
     end
 
     def run
@@ -18,7 +21,7 @@ module ActiveRecordDiscover
       LineNumberConfiguration.reset
       LineNumberConfiguration.from_paths(paths)
 
-      paths.map do |path|
+      @items = paths.map do |path|
         ast_callbacks = ASTCallback.from_file(path) do |ast_callback|
           (kind.nil? || ast_callback.kind == kind.to_s) &&
             (name.nil? || ast_callback.name == name.to_s)
@@ -33,7 +36,18 @@ module ActiveRecordDiscover
             end.uniq(&:ast)
           )
         end.flatten
-      end
+      end.flatten
+
+      self
+    end
+
+    def each(&block)
+      items.each(&block)
+      self
+    end
+
+    def empty?
+      !any?
     end
 
     private

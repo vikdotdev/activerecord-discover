@@ -2,7 +2,7 @@ module ActiveRecordDiscover
   class PermutationHelper
     def self.callback_pairs
       ActiveRecord::Callbacks::CALLBACKS.map do |pair|
-        pair.to_s.split('_').map(&:to_sym)
+        pair.to_s.split('_').map(&:to_sym) + [pair]
       end
     end
 

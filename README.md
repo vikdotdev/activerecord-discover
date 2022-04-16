@@ -1,6 +1,13 @@
 # ActiveRecordDiscover
 Short description and motivation.
 
+Prepare the testing database:
+```
+pushd test/dummy
+RAILS_ENV=test bin/rails db:migrate
+popd
+```
+
 ## Usage
 How to use my plugin.
 

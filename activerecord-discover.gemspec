@@ -24,12 +24,13 @@ Gem::Specification.new do |spec|
   end
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
-  spec.test_files = Dir["spec/**/*"]
+  spec.test_files = Dir["test/**/*"]
 
   spec.required_ruby_version = '>= 2.7'
 
+  # WARNING: i borked automatic constant loading after bundle update
   spec.add_dependency "rails"
-  spec.add_dependency "unparser"
+  # spec.add_dependency "unparser"
   spec.add_dependency "ffast"
   spec.add_dependency "rouge", "~> 3"
   spec.add_dependency "colorize"

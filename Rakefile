@@ -15,10 +15,8 @@ RDoc::Task.new(:rdoc) do |rdoc|
 end
 
 require 'bundler/gem_tasks'
-require 'rspec/core'
-require 'rspec/core/rake_task'
 
-desc 'Run all specs in spec directory (excluding plugin specs)'
-RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare')
+$: << File.expand_path("test", __dir__)
+require "rails/plugin/test"
 
 task default: :spec

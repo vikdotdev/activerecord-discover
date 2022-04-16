@@ -3,6 +3,7 @@ module ActiveRecordDiscover
     def self.from(model, by_name: nil)
       return if by_name.nil?
 
+      # TODO is this ok?
       path = model.instance_method(by_name).source_location.first
       ast = Fast.search_file(method_pattern(by_name), path).map { |ast| ast }.compact.uniq.first
 

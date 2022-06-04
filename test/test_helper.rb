@@ -14,6 +14,8 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
 end
 
 require "minitest/spec"
+require "minitest/mock"
+require "minitest/focus"
 require 'pry-byebug'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }

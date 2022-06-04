@@ -1,6 +1,7 @@
 module ActiveRecordDiscover
   class PrintWrapper
     def self.print(model, kind: nil, name: nil)
+      # TODO add test for this bit
       unless model.ancestors.include?(ActiveRecord::Base)
         puts "\"#{model}\" is not an ActiveRecord::Base ancestor."
         return
@@ -31,6 +32,10 @@ module ActiveRecordDiscover
       define_method("discover_#{name}_callbacks_of") do |model|
         PrintWrapper.print(model, name: name)
       end
+    end
+
+    def discover_callbacks_of(model)
+      PrintWrapper.print(model)
     end
 
     # ENTITIES.each do |entity|

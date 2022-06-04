@@ -1,7 +1,7 @@
 require "test_helper"
 
 module ActiveRecordDiscover
-  class AstCallbackTest < ActiveSupport::TestCase
+  class ASTCallbackTest < ActiveSupport::TestCase
     describe "kind and name permutations" do
       PermutationHelper.callback_pairs.each do |kind, name, callback|
         it "finds a method callback: #{callback}" do
@@ -17,7 +17,7 @@ module ActiveRecordDiscover
 
           actual.each do |group|
             assert_kind_of ASTCallbackMetadata, group
-            assert group.callback.method?
+            assert_predicate  group.callback, :method?
             assert_equal template.yield_content(:callback).to_ast, group.callback.ast
             assert_equal kind.to_s, group.callback.kind
             assert_equal name.to_s, group.callback.name
@@ -39,7 +39,7 @@ module ActiveRecordDiscover
 
           actual.each do |group|
             assert_kind_of ASTCallbackMetadata, group
-            assert group.callback.proc?
+            assert_predicate  group.callback, :proc?
             assert_equal template.yield_content(:callback).to_ast, group.callback.ast
             assert_equal kind.to_s, group.callback.kind
             assert_equal name.to_s, group.callback.name
@@ -155,7 +155,7 @@ module ActiveRecordDiscover
 
             actual.each do |group|
               assert_kind_of ASTCallbackMetadata, group
-              assert group.callback.method?
+              assert_predicate  group.callback, :method?
               assert_equal concern_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal model_template.yield_content(:method).to_ast, group.method.ast
             end
@@ -181,7 +181,7 @@ module ActiveRecordDiscover
 
             actual.each do |group|
               assert_kind_of ASTCallbackMetadata, group
-              assert group.callback.method?
+              assert_predicate  group.callback, :method?
               assert_equal model_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template.yield_content(:method).to_ast, group.method.ast
             end
@@ -198,7 +198,7 @@ module ActiveRecordDiscover
 
             actual.each do |group|
               assert_kind_of ASTCallbackMetadata, group
-              assert group.callback.method?
+              assert_predicate  group.callback, :method?
               assert_equal concern_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template.yield_content(:method).to_ast, group.method.ast
             end
@@ -218,7 +218,7 @@ module ActiveRecordDiscover
 
             actual.each do |group|
               assert_kind_of ASTCallbackMetadata, group
-              assert group.callback.method?
+              assert_predicate  group.callback, :method?
               assert_equal concern_template_with_callback.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template_with_method.yield_content(:method).to_ast, group.method.ast
             end
@@ -245,7 +245,7 @@ module ActiveRecordDiscover
 
           actual.each do |group|
             assert_kind_of ASTCallbackMetadata, group
-            assert group.callback.method?
+            assert_predicate  group.callback, :method?
             assert_equal parent_template.yield_content(:method).to_ast, group.method.ast
             assert_equal child_template.yield_content(:callback).to_ast, group.callback.ast
           end

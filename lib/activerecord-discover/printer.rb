@@ -6,6 +6,7 @@ module ActiveRecordDiscover
     extend  HighlightHelper
     include PathHelper
 
+    # TODO rename param
     def self.print(metadata_list)
       puts gray_colored("No callbacks found") if metadata_list.empty?
 

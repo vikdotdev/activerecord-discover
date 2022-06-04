@@ -1,7 +1,7 @@
 module ActiveRecordDiscover
   class ASTCallback
     def self.from_file(path, &block)
-      Fast.search_file(is_callback_pattern, path).map do |ast|
+      Fast.search_file(callback_pattern, path).map do |ast|
         ast_callback = new(ast)
         matches = yield(ast_callback) if block_given?
 
@@ -18,7 +18,7 @@ module ActiveRecordDiscover
     end
 
     def match?
-      Fast.match?(self.class.is_callback_pattern, ast)
+      Fast.match?(self.class.callback_pattern, ast)
     end
 
     def method?
@@ -71,13 +71,13 @@ module ActiveRecordDiscover
       Fast.capture('(send nil $_)', ast).first.to_s.split('_').first.to_s
     end
 
-    def self.is_callback_pattern
+    def self.callback_pattern
       <<-PATTERN
         (send nil { #{existing_callbacks} }
           ({ block sym } { _ ...})
           ?(hash
             (pair
-              (sym { if unless on })
+              (sym _)
               ({ sym array block } { _ ... }))))
       PATTERN
     end

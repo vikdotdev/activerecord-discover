@@ -2,6 +2,10 @@ class ManualCondition < ActiveRecord::Base
   include ConcernManualYesNoMaybeCondition
 
   def validation_callback
+    1 + 1
+    if true
+      :hello
+    end
   end
 
   before_validation :validation_callback, if:     %i[maybe? no? yes?]

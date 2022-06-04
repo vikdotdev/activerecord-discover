@@ -19,4 +19,5 @@ require 'bundler/gem_tasks'
 $: << File.expand_path("test", __dir__)
 require "rails/plugin/test"
 
-task default: :spec
+task default: :test
+

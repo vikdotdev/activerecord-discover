@@ -3,6 +3,7 @@ class ManualStiParent < ActiveRecord::Base
   end
 
   def parent_callback_method_for_parent
+    1 + 1
   end
 
   before_validation :parent_callback_method_for_parent

@@ -1,5 +1,4 @@
 require 'fast'
-# require 'unparser'
 require 'rouge'
 require 'colorize'
 

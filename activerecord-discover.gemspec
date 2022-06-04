@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
 
   # WARNING: i borked automatic constant loading after bundle update
   spec.add_dependency "rails"
-  # spec.add_dependency "unparser"
   spec.add_dependency "ffast"
   spec.add_dependency "rouge", "~> 3"
   spec.add_dependency "colorize"

@@ -21,6 +21,6 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 include ModelHelper
 
 Minitest.after_run do
-  # ModelTemplate.clean
-  # ConcernTemplate.clean
+  ModelTemplate.clean
+  ConcernTemplate.clean
 end

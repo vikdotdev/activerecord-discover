@@ -52,7 +52,9 @@ end
 class ModelTemplate < BaseTemplate
   def self.clean
     model_paths = File.join(File.dirname(__FILE__), '../dummy/app/models', '*.rb')
-    Dir.glob(model_paths).map { |path| File.delete(path) }
+    Dir.glob(model_paths).map do |path|
+      File.delete(path) if File.basename(path).exclude?('manual')
+    end
   end
 
   def template_path(name)
@@ -67,7 +69,9 @@ end
 class ConcernTemplate < BaseTemplate
   def self.clean
     concern_paths = File.join(File.dirname(__FILE__), '../dummy/app/models/concerns', '*.rb')
-    Dir.glob(concern_paths).map { |path| File.delete(path) }
+    Dir.glob(concern_paths).map do |path|
+      File.delete(path) if File.basename(path).exclude?('manual')
+    end
   end
 
   def template_path(name)

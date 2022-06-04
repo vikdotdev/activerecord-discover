@@ -1,4 +1,5 @@
 require 'fast'
+require 'method_source'
 require 'rouge'
 require 'colorize'
 

@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ffast"
   spec.add_dependency "rouge", "~> 3"
   spec.add_dependency "colorize"
+  spec.add_dependency "method_source"
 
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-byebug"

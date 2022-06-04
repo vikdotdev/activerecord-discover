@@ -1,13 +1,25 @@
 module ActiveRecordDiscover
-  class CallbackSourceLocation
-    def self.paths(model)
-      new(model).paths
-    end
-
+  class SourceLocationBase
     attr_reader :model
 
     def initialize(model)
       @model = model
+    end
+  end
+
+  class InstanceMethodSourceLocation < SourceLocationBase
+    def self.path(model, method_name)
+      new(model).instance_method_path(method_name)
+    end
+
+    def instance_method_path(name)
+      model.instance_method(name).source_location&.first
+    end
+  end
+
+  class CallbackSourceLocation < SourceLocationBase
+    def self.paths(model)
+      new(model).paths
     end
 
     def paths

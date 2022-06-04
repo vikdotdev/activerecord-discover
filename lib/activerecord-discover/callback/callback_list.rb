@@ -21,7 +21,7 @@ module ActiveRecordDiscover
       LineNumberConfiguration.reset
       LineNumberConfiguration.from_paths(paths)
 
-      @items = paths.map do |path|
+      @items = paths.flat_map do |path|
         ast_callbacks = ASTCallback.from_file(path) do |ast_callback|
           (kind.nil? || ast_callback.kind == kind.to_s) &&
             (name.nil? || ast_callback.name == name.to_s)
@@ -35,8 +35,8 @@ module ActiveRecordDiscover
               ASTMethod.from(model, by_name: method_name)
             end.uniq(&:ast)
           )
-        end.flatten
-      end.flatten
+        end
+      end
 
       self
     end

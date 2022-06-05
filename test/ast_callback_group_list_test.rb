@@ -164,7 +164,7 @@ module ActiveRecordDiscover
 
         describe "when outside included block" do
           it "finds callback with that method" do
-            skip "Not yet implemented"
+            skip "TODO implement the test"
           end
         end
       end
@@ -227,7 +227,7 @@ module ActiveRecordDiscover
 
         describe "when outside included block" do
           it "finds callback with that method" do
-            skip "Not yet implemented"
+            skip "TODO implement the test"
           end
         end
       end

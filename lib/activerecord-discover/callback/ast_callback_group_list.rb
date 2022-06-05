@@ -1,7 +1,7 @@
 module ActiveRecordDiscover
-  class CallbackList
+  class ASTCallbackGroupList
     def self.filter(model, kind: nil, name: nil)
-      CallbackList.new(model, kind: kind, name: name).run
+      ASTCallbackGroupList.new(model, kind: kind, name: name).run
     end
 
     include Enumerable
@@ -28,7 +28,7 @@ module ActiveRecordDiscover
         end
 
         ast_callbacks.map do |ast_callback|
-          ASTCallbackMetadata.new(
+          ASTCallbackGroup.new(
             ast_callback,
             ast_method: ASTMethod.from(model, by_name: ast_callback.method_name),
             ast_condition_methods: ast_callback.conditions_method_names.map do |method_name|

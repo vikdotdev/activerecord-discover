@@ -7,16 +7,16 @@ module ActiveRecordDiscover
         it "finds a method callback: #{callback}" do
           template = model_setup :method, callback: callback, method: :example
 
-          actual = CallbackList.filter(template.name.constantize, kind: kind, name: name)
+          actual = ASTCallbackGroupList.filter(template.name.constantize, kind: kind, name: name)
 
           refute_empty actual
-          assert_kind_of CallbackList, actual
+          assert_kind_of ASTCallbackGroupList, actual
 
           assert_equal kind, actual.kind
           assert_equal name, actual.name
 
           actual.each do |group|
-            assert_kind_of ASTCallbackMetadata, group
+            assert_kind_of ASTCallbackGroup, group
             assert_predicate  group.callback, :method?
             assert_equal template.yield_content(:callback).to_ast, group.callback.ast
             assert_equal kind.to_s, group.callback.kind
@@ -29,16 +29,16 @@ module ActiveRecordDiscover
         it "finds a proc callback: #{callback}" do
           template = model_setup :proc, callback: callback
 
-          actual = CallbackList.filter(template.name.constantize, kind: kind, name: name)
+          actual = ASTCallbackGroupList.filter(template.name.constantize, kind: kind, name: name)
 
           refute_empty actual
-          assert_kind_of CallbackList, actual
+          assert_kind_of ASTCallbackGroupList, actual
 
           assert_equal kind, actual.kind
           assert_equal name, actual.name
 
           actual.each do |group|
-            assert_kind_of ASTCallbackMetadata, group
+            assert_kind_of ASTCallbackGroup, group
             assert_predicate  group.callback, :proc?
             assert_equal template.yield_content(:callback).to_ast, group.callback.ast
             assert_equal kind.to_s, group.callback.kind
@@ -57,7 +57,7 @@ module ActiveRecordDiscover
             template = model_setup :options_with_method, callback: :before_save,
               method: :example, options: { condition => options_method }, methods: [options_method]
 
-            actual = CallbackList.filter(template.name.constantize)
+            actual = ASTCallbackGroupList.filter(template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
@@ -80,7 +80,7 @@ module ActiveRecordDiscover
               callback: :before_validation, method: :example,
               options: { condition => options_methods }, methods: options_methods
 
-            actual = CallbackList.filter(template.name.constantize)
+            actual = ASTCallbackGroupList.filter(template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
@@ -105,7 +105,7 @@ module ActiveRecordDiscover
                 options: { condition_1 => option_method_1, condition_2 => option_method_2 },
                 methods: [option_method_1, option_method_2]
 
-              actual = CallbackList.filter(template.name.constantize)
+              actual = ASTCallbackGroupList.filter(template.name.constantize)
               refute_empty actual
 
               actual.each do |group|
@@ -129,7 +129,7 @@ module ActiveRecordDiscover
       it "finds no callbacks in model" do
         template = model_setup :empty
 
-        assert_empty CallbackList.filter(template.name.constantize)
+        assert_empty ASTCallbackGroupList.filter(template.name.constantize)
       end
 
       describe "with concerns included" do
@@ -137,7 +137,7 @@ module ActiveRecordDiscover
           concern_template = concern_setup :empty
           model_template = model_setup :empty, includes: concern_template
 
-          assert_empty CallbackList.filter(model_template.name.constantize)
+          assert_empty ASTCallbackGroupList.filter(model_template.name.constantize)
         end
       end
     end
@@ -150,11 +150,11 @@ module ActiveRecordDiscover
               method: :example, skip_method_definition: true
             model_template = model_setup :method, method: :example, includes: concern_template
 
-            actual = CallbackList.filter(model_template.name.constantize)
+            actual = ASTCallbackGroupList.filter(model_template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
-              assert_kind_of ASTCallbackMetadata, group
+              assert_kind_of ASTCallbackGroup, group
               assert_predicate  group.callback, :method?
               assert_equal concern_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal model_template.yield_content(:method).to_ast, group.method.ast
@@ -176,11 +176,11 @@ module ActiveRecordDiscover
             model_template = model_setup :method, callback: :before_save,
               method: :example, skip_method_definition: true, includes: concern_template
 
-            actual = CallbackList.filter(model_template.name.constantize)
+            actual = ASTCallbackGroupList.filter(model_template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
-              assert_kind_of ASTCallbackMetadata, group
+              assert_kind_of ASTCallbackGroup, group
               assert_predicate  group.callback, :method?
               assert_equal model_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template.yield_content(:method).to_ast, group.method.ast
@@ -193,11 +193,11 @@ module ActiveRecordDiscover
             concern_template = concern_setup :method, callback: :before_save, method: :example
             model_template = model_setup :empty, includes: concern_template
 
-            actual = CallbackList.filter(model_template.name.constantize)
+            actual = ASTCallbackGroupList.filter(model_template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
-              assert_kind_of ASTCallbackMetadata, group
+              assert_kind_of ASTCallbackGroup, group
               assert_predicate  group.callback, :method?
               assert_equal concern_template.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template.yield_content(:method).to_ast, group.method.ast
@@ -213,11 +213,11 @@ module ActiveRecordDiscover
             model_template = model_setup :empty,
               includes: [concern_template_with_callback, concern_template_with_method]
 
-            actual = CallbackList.filter(model_template.name.constantize)
+            actual = ASTCallbackGroupList.filter(model_template.name.constantize)
             refute_empty actual
 
             actual.each do |group|
-              assert_kind_of ASTCallbackMetadata, group
+              assert_kind_of ASTCallbackGroup, group
               assert_predicate  group.callback, :method?
               assert_equal concern_template_with_callback.yield_content(:callback).to_ast, group.callback.ast
               assert_equal concern_template_with_method.yield_content(:method).to_ast, group.method.ast
@@ -240,11 +240,11 @@ module ActiveRecordDiscover
           child_template = model_setup :method, callback: :before_save,
             method: :example, skip_method_definition: true, inherits_from: parent_template
 
-          actual = CallbackList.filter(child_template.name.constantize)
+          actual = ASTCallbackGroupList.filter(child_template.name.constantize)
           refute_empty actual
 
           actual.each do |group|
-            assert_kind_of ASTCallbackMetadata, group
+            assert_kind_of ASTCallbackGroup, group
             assert_predicate  group.callback, :method?
             assert_equal parent_template.yield_content(:method).to_ast, group.method.ast
             assert_equal child_template.yield_content(:callback).to_ast, group.callback.ast
@@ -257,9 +257,9 @@ module ActiveRecordDiscover
       it "finds no callbacks" do
         template = model_setup :not_real_callback, callback: :before_custom, method: :example
 
-        actual = CallbackList.filter(template.name.constantize)
+        actual = ASTCallbackGroupList.filter(template.name.constantize)
 
-        assert_kind_of CallbackList, actual
+        assert_kind_of ASTCallbackGroupList, actual
         assert_empty actual
       end
     end

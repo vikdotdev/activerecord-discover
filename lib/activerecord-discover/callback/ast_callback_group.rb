@@ -1,6 +1,5 @@
 module ActiveRecordDiscover
-  # TODO: rename to group
-  class ASTCallbackMetadata
+  class ASTCallbackGroup
     attr_reader :callback, :method, :condition_methods
 
     def initialize(ast_callback, ast_method: nil, ast_condition_methods: nil)

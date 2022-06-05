@@ -1,14 +1,13 @@
 module ActiveRecordDiscover
   class PrintWrapper
     def self.print(model, kind: nil, name: nil)
-      # TODO add test for this bit
       unless model.ancestors.include?(ActiveRecord::Base)
         puts "\"#{model}\" is not an ActiveRecord::Base ancestor."
         return
       end
 
-      ActiveRecordDiscover::Printer.print(
-        ActiveRecordDiscover::CallbackList.filter(model, kind: kind, name: name)
+      ActiveRecordDiscover::Printer.print_all(
+        ActiveRecordDiscover::ASTCallbackGroupList.filter(model, kind: kind, name: name)
       )
 
       nil

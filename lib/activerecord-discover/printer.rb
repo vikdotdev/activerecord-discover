@@ -6,23 +6,22 @@ module ActiveRecordDiscover
     extend  HighlightHelper
     include PathHelper
 
-    # TODO rename param
-    def self.print(metadata_list)
-      puts gray_colored("No callbacks found") if metadata_list.empty?
+    def self.print_all(callback_group_list)
+      puts gray_colored("No callbacks found") if callback_group_list.empty?
 
-      metadata_list.each do |metadata|
-        new(metadata).format_print
+      callback_group_list.each do |callback_group|
+        new(callback_group).format_print
       end
     end
 
-    attr_reader :metadata
+    attr_reader :callback_group
 
-    def initialize(metadata)
-      @metadata = metadata
+    def initialize(callback_group)
+      @callback_group = callback_group
     end
 
     def format_print
-      pairs = metadata.printable_targets.map do |target|
+      pairs = callback_group.printable_targets.map do |target|
         source = unindent_lines_for(target.ast)
         source = highlight_format_source(source) if colors_enabled?
         source = line_number_source(source, target.ast) if line_numbers_enabled?

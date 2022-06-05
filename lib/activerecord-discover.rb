@@ -13,9 +13,9 @@ require_relative 'activerecord-discover/helpers/line_number_helper'
 
 require_relative 'activerecord-discover/association/association_list'
 
-require_relative 'activerecord-discover/callback/callback_list'
+require_relative 'activerecord-discover/callback/ast_callback_group_list'
 require_relative 'activerecord-discover/callback/ast_callback'
-require_relative 'activerecord-discover/callback/ast_callback_metadata'
+require_relative 'activerecord-discover/callback/ast_callback_group'
 require_relative 'activerecord-discover/callback/ast_method'
 require_relative 'activerecord-discover/callback/callback_source_location'
 

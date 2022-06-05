@@ -1,0 +1,9 @@
+class <%= name %> < ActiveRecord::Base
+  class << self
+    def <%= @callback %>(param); end
+  end
+
+  <% content_for(:callback) do %>
+    <%= @callback %> :example
+  <% end %>
+end

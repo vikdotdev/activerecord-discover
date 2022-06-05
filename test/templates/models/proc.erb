@@ -1,0 +1,10 @@
+class <%= name %> < <%= @inherits_from&.name.presence || "ActiveRecord::Base" %>
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  <% content_for(:callback) do %>
+    <%= @callback %> -> do
+    end
+  <% end %>
+end

@@ -1,5 +1,5 @@
 require 'fast'
-require 'unparser'
+require 'method_source'
 require 'rouge'
 require 'colorize'
 

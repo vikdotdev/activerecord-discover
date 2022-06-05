@@ -1,14 +1,13 @@
 module ActiveRecordDiscover
   class Printer
     include ConfigurationHelper
-    include LineNumberHelper
+    include LineHelper
     include HighlightHelper
     extend  HighlightHelper
     include PathHelper
 
+    # TODO rename param
     def self.print(metadata_list)
-      metadata_list = metadata_list.flatten
-
       puts gray_colored("No callbacks found") if metadata_list.empty?
 
       metadata_list.each do |metadata|
@@ -24,7 +23,7 @@ module ActiveRecordDiscover
 
     def format_print
       pairs = metadata.printable_targets.map do |target|
-        source = Unparser.unparse(target.ast)
+        source = unindent_lines_for(target.ast)
         source = highlight_format_source(source) if colors_enabled?
         source = line_number_source(source, target.ast) if line_numbers_enabled?
 

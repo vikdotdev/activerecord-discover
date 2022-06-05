@@ -1,0 +1,10 @@
+module <%= name %>
+  extend ActiveSupport::Concern
+
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  included do
+  end
+end

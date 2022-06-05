@@ -1,0 +1,19 @@
+class <%= name %> < ActiveRecord::Base
+  <% content_for(:callback) do %>
+    <%= @callback %> :<%= @method %>, <%= @options.inspect_no_parenthesis %>
+  <% end %>
+
+  <% content_for(:method) do %>
+    def <%= @method %>
+    end
+  <% end %>
+
+  <% if @methods.present? %>
+    <% @methods.each do |method|%>
+      <% content_for("condition_method_#{method}".to_sym) do %>
+        def <%= method %>
+        end
+      <% end %>
+    <% end %>
+  <% end %>
+end

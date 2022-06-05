@@ -3,8 +3,8 @@ module ActiveRecordDiscover
     def self.from(model, by_name: nil)
       return if by_name.nil?
 
-      path = model.instance_method(by_name).source_location.first
-      ast = Fast.search_file(method_pattern(by_name), path).map { |ast| ast }.compact.uniq.first
+      path = InstanceMethodSourceLocation.path(model, by_name)
+      ast = Fast.search_file(method_pattern(by_name), path).compact.uniq.first
 
       new(ast, by_name)
     rescue

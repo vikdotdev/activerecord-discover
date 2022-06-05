@@ -24,18 +24,17 @@ Gem::Specification.new do |spec|
   end
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
-  spec.test_files = Dir["spec/**/*"]
+  spec.test_files = Dir["test/**/*"]
 
   spec.required_ruby_version = '>= 2.7'
 
   spec.add_dependency "rails"
-  spec.add_dependency "unparser"
-  spec.add_dependency "ffast"
+  spec.add_dependency "ffast", "0.2.0"
   spec.add_dependency "rouge", "~> 3"
   spec.add_dependency "colorize"
+  spec.add_dependency "method_source"
 
-  spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "sqlite3"
-  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "minitest-focus"
 end

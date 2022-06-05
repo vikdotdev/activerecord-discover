@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class PrintWrapper
     def self.print(model, kind: nil, name: nil)
       # TODO add test for this bit
@@ -7,8 +7,8 @@ module ActiveRecordDiscover
         return
       end
 
-      ActiveRecordDiscover::Printer.print(
-        ActiveRecordDiscover::CallbackList.filter(model, kind: kind, name: name)
+      DiscoverRails::Printer.print(
+        DiscoverRails::CallbackList.filter(model, kind: kind, name: name)
       )
 
       nil
@@ -40,8 +40,8 @@ module ActiveRecordDiscover
 
     # ENTITIES.each do |entity|
     #   define_method("discover_#{entity}_of") do |model|
-    #     ActiveRecordDiscover::BaseFormatter.from_pairs(
-    #       "ActiveRecordDiscover::#{entity.to_s.singularize.capitalize}List".constantize.filter(model)
+    #     DiscoverRails::BaseFormatter.from_pairs(
+    #       "DiscoverRails::#{entity.to_s.singularize.capitalize}List".constantize.filter(model)
     #     )
     #   end
     # end

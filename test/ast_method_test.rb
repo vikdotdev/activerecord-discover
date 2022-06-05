@@ -1,6 +1,6 @@
 require 'test_helper'
 
-module ActiveRecordDiscover
+module DiscoverRails
   class ASTMethodTest < ActiveSupport::TestCase
     describe "when regular method across multiple lines" do
       it "finds method" do

@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class SourceLocationBase
     attr_reader :model
 

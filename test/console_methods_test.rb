@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-module ActiveRecordDiscover
+module DiscoverRails
   class DummyConsoleEnvironment
     include ConsoleMethods
   end

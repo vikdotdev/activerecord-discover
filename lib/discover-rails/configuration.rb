@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class << self
     attr_accessor :config
   end
@@ -20,15 +20,15 @@ module ActiveRecordDiscover
 
   module ConfigurationHelper
     def colors_enabled?
-      ActiveRecordDiscover.config.colors
+      DiscoverRails.config.colors
     end
 
     def line_numbers_enabled?
-      ActiveRecordDiscover.config.line_numbers
+      DiscoverRails.config.line_numbers
     end
 
     def show_full_path?
-      ActiveRecordDiscover.config.show_full_path
+      DiscoverRails.config.show_full_path
     end
   end
 

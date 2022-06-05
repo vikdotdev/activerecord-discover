@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   # TODO: rename to group
   class ASTCallbackMetadata
     attr_reader :callback, :method, :condition_methods

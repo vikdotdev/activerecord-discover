@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   CALLBACK_KINDS = %i[before around after].freeze
   CALLBACK_NAMES = %i[initialize find touch validation save
                       create update destroy commit rollback].freeze

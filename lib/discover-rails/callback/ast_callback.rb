@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class ASTCallback
     def self.from_file(path, &block)
       Fast.search_file(callback_pattern, path).map do |ast|

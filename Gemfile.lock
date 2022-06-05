@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord-discover (0.1.0)
+    discover-rails (0.1.0)
       colorize
       ffast (= 0.2.0)
       method_source
@@ -166,7 +166,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-discover!
+  discover-rails!
   minitest-focus
   pry-byebug
   sqlite3

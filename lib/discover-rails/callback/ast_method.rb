@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class ASTMethod
     def self.from(model, by_name: nil)
       return if by_name.nil?

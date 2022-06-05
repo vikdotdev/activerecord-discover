@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class AssociationList
     def self.all(model)
       []

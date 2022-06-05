@@ -3,7 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "activerecord-discover"
+require "discover-rails"
 
 module Dummy
   class Application < Rails::Application

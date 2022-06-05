@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ActiveRecordDiscover
+module DiscoverRails
   class ASTCallbackTest < ActiveSupport::TestCase
     describe "kind and name permutations" do
       PermutationHelper.callback_pairs.each do |kind, name, callback|

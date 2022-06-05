@@ -1,17 +1,17 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "activerecord-discover/version"
+require "discover-rails/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = "activerecord-discover"
-  spec.version     = ActiveRecordDiscover::VERSION
+  spec.name        = "discover-rails"
+  spec.version     = DiscoverRails::VERSION
   spec.authors     = ["Viktor Habchak"]
   spec.email       = ["vikdotdev@gmail.com"]
-  spec.homepage    = "https://github.com/vikdotdev/activerecord-discover"
-  spec.summary     = "Discover your ActiveRecord models."
-  spec.description = "Print a detailed report of your ActiveRecord models with cli/rails console."
+  spec.homepage    = "https://github.com/vikdotdev/discover-rails"
+  spec.summary     = "Discover your Rails application."
+  spec.description = "Print a detailed report of specific parts of your Rails application from Rails console."
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

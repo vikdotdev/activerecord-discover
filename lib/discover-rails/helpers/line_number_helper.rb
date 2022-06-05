@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   module LineHelper
     include HighlightHelper
 

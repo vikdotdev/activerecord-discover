@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class Printer
     include ConfigurationHelper
     include LineHelper

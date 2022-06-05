@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class CallbackList
     def self.filter(model, kind: nil, name: nil)
       CallbackList.new(model, kind: kind, name: name).run
@@ -12,6 +12,7 @@ module ActiveRecordDiscover
       @model = model
       @kind = kind
       @name = name
+      # TODO rename to something more descriptive
       @items = []
     end
 

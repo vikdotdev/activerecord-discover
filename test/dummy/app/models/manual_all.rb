@@ -1,4 +1,3 @@
-# All callback types
 class ManualAll < ActiveRecord::Base
   # Initialize
   after_initialize :after_initialize_as_method

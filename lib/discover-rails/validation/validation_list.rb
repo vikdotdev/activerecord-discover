@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class ValidationList
     def self.all(model)
       []

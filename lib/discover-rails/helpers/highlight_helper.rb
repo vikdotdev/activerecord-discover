@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   module HighlightHelper
     include ConfigurationHelper
 

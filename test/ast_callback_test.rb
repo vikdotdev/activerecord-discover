@@ -1,6 +1,6 @@
 require 'test_helper'
 
-module ActiveRecordDiscover
+module DiscoverRails
   class ASTCallbackTest < ActiveSupport::TestCase
     describe 'when method' do
       it 'matches when without options' do

@@ -1,4 +1,4 @@
-module ActiveRecordDiscover
+module DiscoverRails
   class PermutationHelper
     def self.callback_pairs
       ActiveRecord::Callbacks::CALLBACKS.map do |pair|

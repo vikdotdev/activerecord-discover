@@ -37,6 +37,14 @@ module ActiveRecordDiscover
       PrintWrapper.print(model)
     end
 
+    def discover_validations_of(model)
+      ActiveRecordDiscover::Printer.print_all(
+        ActiveRecordDiscover::ASTValidationList.find(model)
+      )
+
+      nil
+    end
+
     # ENTITIES.each do |entity|
     #   define_method("discover_#{entity}_of") do |model|
     #     ActiveRecordDiscover::BaseFormatter.from_pairs(

@@ -1,5 +1,7 @@
 module ActiveRecordDiscover
   class ASTCallback
+    # TODO move class methods to the top
+    # TODO extract callback patterns
     def self.from_file(path, &block)
       Fast.search_file(callback_pattern, path).map do |ast|
         ast_callback = new(ast)

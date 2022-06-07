@@ -1,0 +1,23 @@
+class <%= name %> < ActiveRecord::Base
+  <% options = ", #{@options.inspect_no_parenthesis}" rescue nil %>
+  <% content_for(:validation) do %>
+    validate :<%= Array.wrap(@methods).join(', :') %><%= options %> do
+    end
+  <% end %>
+
+  <% if @methods.present? %>
+    <% Array.wrap(@methods).each do |method|%>
+      <% content_for("method_#{method}".to_sym) do %>
+        def <%= method %>
+        end
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}") do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

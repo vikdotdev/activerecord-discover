@@ -1,0 +1,26 @@
+module <%= name %>
+  extend ActiveSupport::Concern
+
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  included do
+    <% if !@skip_validation %>
+      <% options = ", #{@options.inspect_no_parenthesis}" rescue nil %>
+
+      <% content_for(:validation) do %>
+        validate :<%= Array.wrap(@methods).join(', :') %><%= options %>
+      <% end %>
+    <% end %>
+
+    <% if @methods.present? && !@skip_methods %>
+      <% Array.wrap(@methods).each do |method|%>
+        <% content_for("method_#{method}".to_sym) do %>
+          def <%= method %>
+          end
+        <% end %>
+      <% end %>
+    <% end %>
+  end
+end

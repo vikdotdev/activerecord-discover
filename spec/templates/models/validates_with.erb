@@ -1,0 +1,21 @@
+<% validators = %w[FooValidator BarValidator] %>
+<% validators.each do |validator| %>
+  class <%= validator %> < ActiveModel::Validator
+    def validate(record)
+    end
+  end
+<% end %>
+
+class <%= name %> < ActiveRecord::Base
+  <% options = ", #{@options.inspect_no_parenthesis}" rescue nil %>
+  <% content_for(:validation) do %>
+    validates_with <%= validators.join(', ') %><%= options %>
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}".to_sym) do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

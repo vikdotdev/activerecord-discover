@@ -1,0 +1,27 @@
+class <%= name %> < <%= @parent&.name.presence || "ActiveRecord::Base" %>
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  <% if !@skip_validation %>
+    <% content_for(:validation) do %>
+      validate :<%= Array.wrap(@methods).join(', :') %><%= ', ' + @options.inspect_no_parenthesis if @options.present? %>
+    <% end %>
+  <% end %>
+
+  <% if @methods.present? && !@skip_methods %>
+    <% Array.wrap(@methods).each do |method|%>
+      <% content_for("method_#{method}".to_sym) do %>
+        def <%= method %>
+        end
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}") do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

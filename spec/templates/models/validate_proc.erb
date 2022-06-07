@@ -1,0 +1,13 @@
+class <%= name %> < ActiveRecord::Base
+  <% content_for(:validation) do %>
+    validate <%= @options.inspect_no_parenthesis if @options.present? %> do
+    end
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}") do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

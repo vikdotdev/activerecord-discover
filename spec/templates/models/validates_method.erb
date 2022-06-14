@@ -1,0 +1,14 @@
+class <%= name %> < ActiveRecord::Base
+  <% options = ", #{@options.inspect_no_parenthesis}" rescue nil %>
+
+  <% content_for(:validation) do %>
+    validates :name, :age <%= options %>
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}".to_sym) do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

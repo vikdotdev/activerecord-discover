@@ -1,4 +1,7 @@
 module ActiveRecordDiscover
+  # TODO handle ast_methods that are not found better, current approach does not work?
+  # TODO implement DebugPrinter which will print the usual stuff + debug info about each
+  # entity
   class Printer
     include ConfigurationHelper
     include LineHelper
@@ -23,7 +26,7 @@ module ActiveRecordDiscover
     def format_print
       pairs = callback_group.printable_targets.map do |target|
         source = unindent_lines_for(target.ast)
-        source = highlight_format_source(source) if colors_enabled?
+        source = highlight_format_source(source) if colors_enabled? # && source.present?
         source = line_number_source(source, target.ast) if line_numbers_enabled?
 
         [source, target]

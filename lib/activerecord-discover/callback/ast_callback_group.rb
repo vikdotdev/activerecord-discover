@@ -16,9 +16,5 @@ module ActiveRecordDiscover
 
       targets.flatten
     end
-
-    def line_length_of(target)
-      target.ast.loc.last_line - target.ast.loc.first_line
-    end
   end
 end

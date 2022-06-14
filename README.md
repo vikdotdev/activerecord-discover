@@ -23,10 +23,19 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
-```bash
-$ gem install activerecord-discover
-```
+## Roadmap
+- Improve test coverage and quality.
+- Add filtering by fields for validations.
+- Implement associations.
+- Potentially bring some items from [Unsupported](#unsupported) section.
+- Improve coloring for light themes.
+
+## Unsupported
+Some things from here might get implemented in the future:
+- `with_options` won't display in the output;
+- `validates_with` with custom `ActiveModel::Validator` won't display class definition in the output;
+- `validates` with custom `ActiveModel::EachValidator` won't display class definition in the output;
+- Options for specific validator `validates :foo, presence: { if: :bar? }` won't display method definitions;
 
 ## Contributing
 Contribution directions go here.
@@ -38,3 +47,9 @@ The gem is available as open source under the terms of the [MIT License](https:/
 - Monkey-patch ActiveRecord::Base class to include method for print instead of generating methods?
 Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_after_create_callbacks;
 - Adapt gem to be compatible with ActiveRecord without Rails?
+- Print file path "Intelligently" by looking at combined entity LOC.
+- Show inherited entities in the output.
+
+## TODO
+- Cleanup spec model templates.
+- Rename manual dummy models to something more generic.

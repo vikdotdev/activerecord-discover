@@ -1,5 +1,8 @@
 module ActiveRecordDiscover
   class ASTCallbackGroupList
+    # TODO add spec for when method is not found for callback
+    #
+    # TODO rename to find
     def self.filter(model, kind: nil, name: nil)
       ASTCallbackGroupList.new(model, kind: kind, name: name).run
     end

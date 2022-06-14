@@ -24,11 +24,10 @@ $ bundle
 ```
 
 ## Roadmap
-- Improve test coverage and quality.
 - Add filtering by fields for validations.
 - Implement associations.
-- Potentially bring some items from [Unsupported](#unsupported) section.
 - Improve coloring for light themes.
+- Potentially bring some items from [Unsupported](#unsupported) section.
 
 ## Unsupported
 Some things from here might get implemented in the future:
@@ -51,5 +50,6 @@ Add arbitrary methods with method_missing e.g. Model.discover_before_save_and_af
 - Show inherited entities in the output.
 
 ## TODO
-- Cleanup spec model templates.
 - Rename manual dummy models to something more generic.
+- Fix handling of `ASTMethod`s that are not found. Current approach has a bug?
+- Print with debug information.

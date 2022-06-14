@@ -1,0 +1,26 @@
+module <%= name %>
+  extend ActiveSupport::Concern
+
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  included do
+    <% callback = @callback.presence || :before_validation %>
+
+    <% if @methods.present? && !@skip_callback %>
+      <% content_for(:callback) do %>
+        <%= callback %> :<%= Array.wrap(@methods).join(', :') %>
+      <% end %>
+    <% end %>
+
+    <% if @methods.present? && !@skip_methods %>
+      <% Array.wrap(@methods).each do |method|%>
+        <% content_for("method_#{method}".to_sym) do %>
+          def <%= method %>
+          end
+        <% end %>
+      <% end %>
+    <% end %>
+  end
+end

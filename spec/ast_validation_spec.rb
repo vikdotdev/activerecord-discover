@@ -31,7 +31,7 @@ RSpec.describe ASTValidation do
         'validates :field, :field_2, presence: true'
       ].each do |syntax_variant|
         it "matches with #{syntax_variant}" do
-          assert_predicate ASTValidation.new(syntax_variant.to_ast, dummy_model), :match?
+          assert_predicate described_class.new(syntax_variant.to_ast, dummy_model), :match?
         end
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe ASTValidation do
         'validates :example, example_2, presence: true'
       ].each do |syntax_variant|
         it "matches with #{syntax_variant}" do
-          assert_predicate ASTValidation.new(syntax_variant.to_ast, dummy_model), :match?
+          assert_predicate described_class.new(syntax_variant.to_ast, dummy_model), :match?
         end
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -112,7 +112,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -133,7 +133,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -176,7 +176,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -188,7 +188,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end
@@ -207,7 +207,7 @@ RSpec.describe ASTValidation do
         it "matches with #{syntax_variant}" do
           ast = syntax_variant.to_ast
 
-          assert_predicate ASTValidation.new(ast, dummy_model), :match?
+          assert_predicate described_class.new(ast, dummy_model), :match?
         end
       end
     end

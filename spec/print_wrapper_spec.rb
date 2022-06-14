@@ -9,7 +9,7 @@ RSpec.describe PrintWrapper do
     end
   end
 
-  describe "when constant is a model" do
+  xdescribe "when constant is a model" do
     it 'prints that no callbacks were found' do
       assert_output(/No callbacks found/) { PrintWrapper.print(dummy_model) }
     end

@@ -1,40 +1,71 @@
 require 'rails_helper'
 
-# TODO cleanup examples
 RSpec.describe ASTCallback do
+  subject { described_class.new(ast, dummy_model) }
+
   describe 'when method' do
-    it 'matches when without options' do
-      ast = 'before_save :example'.to_ast
+    describe 'when without options' do
+      let(:ast) { 'before_validation :example'.to_ast }
 
-      assert_predicate ASTCallback.new(ast), :match?
+      it 'matches when without options' do
+        assert_predicate subject, :match?
+      end
+
+      describe 'when with multiple methods' do
+        let(:ast) { "before_validation :alpha, :beta".to_ast }
+
+        it "matches" do
+          skip 'Not implemented'
+          assert_predicate subject, :match?
+        end
+      end
     end
-
 
     describe 'when with conditional options' do
       %i[if unless].each do |condition|
-        it "matches when with #{condition}" do
-          ast = "before_save :example, #{condition}: :example".to_ast
+        let(:ast) { "before_validation :alpha, #{condition}: :example".to_ast }
 
-          assert_predicate ASTCallback.new(ast), :match?
+        it "matches when with #{condition}" do
+          assert_predicate subject, :match?
         end
       end
 
       describe 'when with permutation of if and unless' do
         %i[if unless].permutation.each do |(condition_1, condition_2)|
-          it "matches when with #{condition_1}, #{condition_2}" do
-            ast = "before_save :ex, #{condition_1}: :ex, #{condition_2}: :ex".to_ast
+          let(:ast) { "before_validation :alpha, #{condition_1}: :beta, #{condition_2}: :charlie".to_ast }
 
-            assert_predicate ASTCallback.new(ast), :match?
+          it "matches when with #{condition_1}, #{condition_2}" do
+            assert_predicate subject, :match?
+          end
+        end
+      end
+
+      describe 'when with both if and unless multiple condition methods' do
+        %i[if unless].permutation.each do |(condition_1, condition_2)|
+          let(:ast) do
+            "before_validation :alpha, #{condition_1}: %i[beta charlie], #{condition_2}: %i[charlie delta]".to_ast
+          end
+
+          it "matches when with #{condition_1}, #{condition_2}" do
+            assert_predicate subject, :match?
           end
         end
       end
     end
 
     describe 'when with non-conditional options' do
-      it 'matches' do
-        ast = "before_save :example, hello: :example".to_ast
+      [
+        'allow_blank: true',
+        'allow_nil: false',
+        'on: :create',
+        # TODO
+        # 'prepend: true',
+      ].each do |syntax_variant|
+        let(:ast) { "before_validation :alpha, #{syntax_variant}".to_ast }
 
-        assert_predicate ASTCallback.new(ast), :match?
+        it 'matches' do
+          assert_predicate subject, :match?
+        end
       end
     end
   end
@@ -42,52 +73,71 @@ RSpec.describe ASTCallback do
   describe 'when proc' do
     describe 'with when without options with different proc syntax variants' do
       [
-        "->{}",
-        "->() {}",
-        "->(param) {}",
-        <<~EOS,
+        '->{}',
+        '->() {}',
+        '->(param) {}',
+        <<~CODE,
           -> do
           end
-        EOS
-        <<~EOS,
+        CODE
+        # TODO
+        # <<~CODE,
+        #   do
+        #   end
+        # CODE
+        <<~CODE,
           ->(param) do
           end
-        EOS
-      ].each do |proc_syntax_variant|
-        it "matches when proc syntax variant is #{proc_syntax_variant}" do
-          ast = "before_save #{proc_syntax_variant}".to_ast
+        CODE
+      ].each do |syntax_variant|
+        let(:ast) { "before_validation #{syntax_variant}".to_ast }
 
-          assert_predicate ASTCallback.new(ast), :match?
+        it "matches when proc syntax variant is #{syntax_variant}" do
+          assert_predicate subject, :match?
         end
       end
     end
 
-    describe 'when with conditional options' do
-      %i[if unless].each do |condition|
-        it "matches when with #{condition}" do
-          ast = "before_save ->{}, #{condition}: :example".to_ast
+    describe 'when with arrow syntax variant' do
+      describe 'when with conditional options' do
+        %i[if unless].each do |condition|
+          let(:ast) { "before_validation ->{}, #{condition}: :alpha".to_ast }
 
-          assert_predicate ASTCallback.new(ast), :match?
+          it "matches when with #{condition}" do
+            assert_predicate subject, :match?
+          end
+        end
+
+        describe 'when with permutation of if and unless' do
+          %i[if unless].permutation.each do |(condition_1, condition_2)|
+            let(:ast) { "before_validation ->{}, #{condition_1}: :alpha, #{condition_2}: :beta".to_ast }
+
+            it "matches when with #{condition_1}, #{condition_2}" do
+              assert_predicate subject, :match?
+            end
+          end
         end
       end
 
-      describe 'when with permutation of if and unless' do
-        %i[if unless].permutation.each do |(condition_1, condition_2)|
-          it "matches when with #{condition_1}, #{condition_2}" do
-            ast = "before_save ->{}, #{condition_1}: :ex, #{condition_2}: :ex".to_ast
+      describe 'when with non-conditional options' do
+        [
+          'allow_blank: true',
+          'allow_nil: false',
+          'on: :create',
+          # TODO
+          # 'prepend: true',
+        ].each do |syntax_variant|
+          let(:ast) { "before_validation ->{}, #{syntax_variant}".to_ast }
 
-            assert_predicate ASTCallback.new(ast), :match?
+          it 'matches' do
+            assert_predicate subject, :match?
           end
         end
       end
     end
 
-    describe 'when with non-conditional options' do
-      it 'matches' do
-        ast = "before_save ->{}, hello: :example".to_ast
-
-        assert_predicate ASTCallback.new(ast), :match?
-      end
+    describe 'when without arrow syntax variant' do
+      pending
     end
   end
 end

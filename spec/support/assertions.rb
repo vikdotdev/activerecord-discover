@@ -12,8 +12,13 @@ module Minitest::Assertions
     assert_equal(a1h, a2h, msg)
   end
 
-  # TODO add same for callbacks
+  def assert_callback(callback, template)
+    assert_kind_of ASTCallback, callback
+    assert_entity(callback, template, entity: :callback)
+  end
+
   def assert_validation(validation, template)
+    assert_kind_of ASTValidation, validation
     assert_entity(validation, template, entity: :validation)
   end
 
@@ -31,6 +36,9 @@ module Minitest::Assertions
       template.yield_content("method_#{method_name}".to_sym)&.to_ast
     end.compact
 
+    refute_empty actual_method_asts
+    refute_empty expected_method_asts
+
     assert_same_elements actual_method_asts, expected_method_asts
   end
 
@@ -41,6 +49,9 @@ module Minitest::Assertions
     expected_method_asts = template.condition_methods.map do |method_name|
       template.yield_content("condition_method_#{method_name}".to_sym).to_ast
     end.compact
+
+    refute_empty actual_method_asts
+    refute_empty expected_method_asts
 
     assert_same_elements actual_method_asts, expected_method_asts
   end

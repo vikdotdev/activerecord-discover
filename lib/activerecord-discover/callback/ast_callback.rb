@@ -1,10 +1,11 @@
 module ActiveRecordDiscover
-  class ASTCallback
-    # TODO move class methods to the top
-    # TODO extract callback patterns
-    def self.from_file(path, &block)
-      Fast.search_file(callback_pattern, path).map do |ast|
-        ast_callback = new(ast)
+  class ASTCallback < ASTEntity
+    include ASTCallbackPatterns
+    extend ASTCallbackPatterns
+
+    def self.from_path(path, model)
+      Fast.search_file(CALLBACK_PATTERN, path).map do |ast|
+        ast_callback = new(ast, model)
         matches = yield(ast_callback) if block_given?
 
         next unless matches
@@ -13,34 +14,36 @@ module ActiveRecordDiscover
       end.compact.uniq
     end
 
-    attr_accessor :ast
-
-    def initialize(ast)
-      @ast = ast
-    end
-
     def match?
-      Fast.match?(self.class.callback_pattern, ast)
+      Fast.match?(CALLBACK_PATTERN, ast)
     end
 
-    def method?
-      pattern = <<-PATTERN
-        (send nil { #{self.class.existing_callbacks} }
-          (sym _))
-      PATTERN
+    def methods
+      return [] unless method_pattern?
 
-      Fast.match?(pattern, ast)
+      Fast.capture(CALLBACK_METHOD_PATTERN, ast).map do |method_name|
+        ASTMethod.from(model, by_name: method_name)
+      end
     end
 
-    def method_name
-      return unless method?
+    def condition_methods
+      conditions_method_names.map do |method_name|
+        ASTMethod.from(model, by_name: method_name)
+      end.uniq(&:ast)
+    end
 
-      pattern = <<-PATTERN
-        (send nil { #{self.class.existing_callbacks} }
-          (sym $_))
-      PATTERN
+    def name
+      callback_symbol.split('_').second.to_s
+    end
 
-      Fast.capture(pattern,  ast)&.first
+    def kind
+      callback_symbol.split('_').first.to_s
+    end
+
+    private
+
+    def callback_symbol
+      Fast.capture('(send nil $_)', ast).first.to_s
     end
 
     def conditions_method_names
@@ -48,44 +51,12 @@ module ActiveRecordDiscover
         node.children.map do |child|
           key_ast, conditions_ast = child.children
 
-          if Fast.match?('(sym { if unless })', key_ast) &&
-            conditions = Fast.capture('(sym $_)', conditions_ast)
+          if Fast.match?('(sym { if unless })', key_ast) && conditions = Fast.capture('(sym $_)', conditions_ast)
             conditions
           end
         end
       end.flatten.compact
     end
 
-    def proc?
-      pattern = <<-PATTERN
-        (send nil { #{self.class.existing_callbacks} }
-          (block ...))
-      PATTERN
-
-      Fast.match?(pattern, ast)
-    end
-
-    def name
-      Fast.capture('(send nil $_)', ast).first.to_s.split('_').second.to_s
-    end
-
-    def kind
-      Fast.capture('(send nil $_)', ast).first.to_s.split('_').first.to_s
-    end
-
-    def self.callback_pattern
-      <<-PATTERN
-        (send nil { #{existing_callbacks} }
-          ({ block sym } { _ ...})
-          ?(hash
-            (pair
-              (sym _)
-              ({ sym array block } { _ ... }))))
-      PATTERN
-    end
-
-    def self.existing_callbacks
-      ActiveRecord::Callbacks::CALLBACKS.join(' ')
-    end
   end
 end

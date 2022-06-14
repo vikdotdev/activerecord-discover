@@ -7,7 +7,7 @@ module ActiveRecordDiscover
       end
 
       ActiveRecordDiscover::Printer.print_all(
-        ActiveRecordDiscover::ASTCallbackGroupList.filter(model, kind: kind, name: name)
+        ActiveRecordDiscover::ASTCallbackList.find(model, kind: kind, name: name)
       )
 
       nil

@@ -33,28 +33,28 @@ RSpec.describe ASTValidationList do
       it "finds validation" do
         refute_empty subject
 
-        subject.each do |group|
-          assert_predicate group.validation, :validates_pattern?
-          assert_validation group.validation, template
-          assert_empty group.validation.methods
-          assert_empty group.validation.condition_methods
+        subject.each do |validation|
+          assert_predicate validation, :validates_pattern?
+          assert_validation validation, template
+          assert_empty validation.methods
+          assert_empty validation.condition_methods
         end
       end
     end
 
     describe "when with options" do
       describe "single condition with single method" do
-        %i[if unless].each do |condition_key|
-          let(:template) { model_setup :validates_method, options: { presence: true, condition_key => :alpha } }
+        %i[if unless].each do |condition|
+          let(:template) { model_setup :validates_method, options: { presence: true, condition => :alpha } }
 
-          it "finds validation with condition #{condition_key} and single method" do
+          it "finds validation with condition #{condition} and single method" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validates_pattern?
-              assert_validation group.validation, template
-              assert_empty group.validation.methods
-              assert_includes_template_condition_methods group.validation, template
+            subject.each do |validation|
+              assert_predicate validation, :validates_pattern?
+              assert_validation validation, template
+              assert_empty validation.methods
+              assert_includes_template_condition_methods validation, template
             end
           end
         end
@@ -62,20 +62,20 @@ RSpec.describe ASTValidationList do
     end
 
     describe "single condition with multiple methods" do
-      %i[if unless].each do |condition_key|
+      %i[if unless].each do |condition|
         let(:template) do
-          model_setup :validates_method, options: { presence: true, condition_key => condition_methods }
+          model_setup :validates_method, options: { presence: true, condition => condition_methods }
         end
         let(:condition_methods) { %i[alpha beta charlie] }
 
-        it "finds validation with condition :#{condition_key} and single method" do
+        it "finds validation with condition :#{condition} and single method" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validates_pattern?
-            assert_validation group.validation, template
-            assert_empty group.validation.methods
-            assert_includes_template_condition_methods group.validation, template
+          subject.each do |validation|
+            assert_predicate validation, :validates_pattern?
+            assert_validation validation, template
+            assert_empty validation.methods
+            assert_includes_template_condition_methods validation, template
           end
         end
       end
@@ -92,11 +92,11 @@ RSpec.describe ASTValidationList do
           it "finds validation with multiple conditions and multiple methods" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validates_pattern?
-              assert_validation group.validation, template
-              assert_empty group.validation.methods
-              assert_includes_template_condition_methods group.validation, template
+            subject.each do |validation|
+              assert_predicate validation, :validates_pattern?
+              assert_validation validation, template
+              assert_empty validation.methods
+              assert_includes_template_condition_methods validation, template
             end
           end
         end
@@ -112,68 +112,68 @@ RSpec.describe ASTValidationList do
         it "finds validation" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validate_pattern?
-            assert_validation group.validation, template
-            assert_includes_template_methods group.validation, template
-            assert_empty group.validation.condition_methods
+          subject.each do |validation|
+            assert_predicate validation, :validate_pattern?
+            assert_validation validation, template
+            assert_includes_template_methods validation, template
+            assert_empty validation.condition_methods
           end
         end
       end
 
       describe "when with options" do
         describe "single condition with single method" do
-          %i[if unless].each do |condition_key|
-            let(:template) { model_setup :validate_method, methods: :alpha, options: { condition_key => :beta } }
+          %i[if unless].each do |condition|
+            let(:template) { model_setup :validate_method, methods: :alpha, options: { condition => :beta } }
 
-            it "finds validation with condition #{condition_key} and single method" do
+            it "finds validation with condition #{condition} and single method" do
               refute_empty subject
 
-              subject.each do |group|
-                assert_predicate group.validation, :validate_pattern?
-                assert_validation group.validation, template
-                assert_includes_template_methods group.validation, template
-                assert_includes_template_condition_methods group.validation, template
+              subject.each do |validation|
+                assert_predicate validation, :validate_pattern?
+                assert_validation validation, template
+                assert_includes_template_methods validation, template
+                assert_includes_template_condition_methods validation, template
               end
             end
           end
         end
 
         describe "single condition with multiple methods" do
-          %i[if unless].each do |condition_key|
+          %i[if unless].each do |condition|
             let(:template) do
-              model_setup :validate_method, methods: :alpha, options: { condition_key => %i[beta charlie] }
+              model_setup :validate_method, methods: :alpha, options: { condition => %i[beta charlie] }
             end
 
-            it "finds validation with condition #{condition_key} and single method" do
+            it "finds validation with condition #{condition} and single method" do
               refute_empty subject
 
-              subject.each do |group|
-                assert_predicate group.validation, :validate_pattern?
-                assert_validation group.validation, template
-                assert_includes_template_methods group.validation, template
-                assert_includes_template_condition_methods group.validation, template
+              subject.each do |validation|
+                assert_predicate validation, :validate_pattern?
+                assert_validation validation, template
+                assert_includes_template_methods validation, template
+                assert_includes_template_condition_methods validation, template
               end
             end
           end
         end
 
         describe "multiple conditions with multiple methods" do
-          %i[if unless].permutation.each do |(condition_key_1, condition_key_2)|
+          %i[if unless].permutation.each do |(condition_1, condition_2)|
             %i[beta charlie].permutation do |(method_1, method_2)|
               let(:template) do
                 model_setup :validate_method, methods: :alpha,
-                  options: { condition_key_1 => method_1, condition_key_2 => method_2 }
+                  options: { condition_1 => method_1, condition_2 => method_2 }
               end
 
               it "finds validation with multiple conditions and multiple methods" do
                 refute_empty subject
 
-                subject.each do |group|
-                  assert_predicate group.validation, :validate_pattern?
-                  assert_validation group.validation, template
-                  assert_includes_template_methods group.validation, template
-                  assert_includes_template_condition_methods group.validation, template
+                subject.each do |validation|
+                  assert_predicate validation, :validate_pattern?
+                  assert_validation validation, template
+                  assert_includes_template_methods validation, template
+                  assert_includes_template_condition_methods validation, template
                 end
               end
             end
@@ -188,11 +188,11 @@ RSpec.describe ASTValidationList do
       it "finds validation" do
         refute_empty subject
 
-        subject.each do |group|
-          assert_predicate group.validation, :validate_pattern?
-          assert_validation group.validation, template
-          assert_includes_template_methods group.validation, template
-          assert_empty group.validation.condition_methods
+        subject.each do |validation|
+          assert_predicate validation, :validate_pattern?
+          assert_validation validation, template
+          assert_includes_template_methods validation, template
+          assert_empty validation.condition_methods
         end
       end
     end
@@ -204,29 +204,29 @@ RSpec.describe ASTValidationList do
         it "finds validation" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validate_pattern?
-            assert_validation group.validation, template
-            assert_empty group.validation.methods
-            assert_empty group.validation.condition_methods
+          subject.each do |validation|
+            assert_predicate validation, :validate_pattern?
+            assert_validation validation, template
+            assert_empty validation.methods
+            assert_empty validation.condition_methods
           end
         end
       end
 
       describe "when with options" do
-        %i[if unless].each do |condition_key|
+        %i[if unless].each do |condition|
           let(:template) do
-            model_setup :validate_proc, options: { condition_key => :alpha }
+            model_setup :validate_proc, options: { condition => :alpha }
           end
 
-          it "finds validation with condition #{condition_key}" do
+          it "finds validation with condition #{condition}" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, template
-              assert_empty group.validation.methods
-              assert_includes_template_condition_methods group.validation, template
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, template
+              assert_empty validation.methods
+              assert_includes_template_condition_methods validation, template
             end
           end
         end
@@ -240,29 +240,29 @@ RSpec.describe ASTValidationList do
         it "finds validation" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validate_pattern?
-            assert_validation group.validation, template
-            assert_includes_template_methods group.validation, template
-            assert_empty group.validation.condition_methods
+          subject.each do |validation|
+            assert_predicate validation, :validate_pattern?
+            assert_validation validation, template
+            assert_includes_template_methods validation, template
+            assert_empty validation.condition_methods
           end
         end
       end
 
       describe "when with options" do
-        %i[if unless].each do |condition_key|
+        %i[if unless].each do |condition|
           let(:template) do
-            model_setup :validate_method_proc, methods: :alpha, options: { condition_key => :beta }
+            model_setup :validate_method_proc, methods: :alpha, options: { condition => :beta }
           end
 
-          it "finds validation with condition #{condition_key}" do
+          it "finds validation with condition #{condition}" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, template
-              assert_includes_template_methods group.validation, template
-              assert_includes_template_condition_methods group.validation, template
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, template
+              assert_includes_template_methods validation, template
+              assert_includes_template_condition_methods validation, template
             end
           end
         end
@@ -284,11 +284,11 @@ RSpec.describe ASTValidationList do
           it 'finds callback' do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, concern_template
-              assert_includes_template_methods group.validation, model_template
-              assert_empty group.validation.condition_methods
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, concern_template
+              assert_includes_template_methods validation, model_template
+              assert_empty validation.condition_methods
             end
           end
         end
@@ -310,11 +310,11 @@ RSpec.describe ASTValidationList do
           it "finds callback" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, model_template
-              assert_includes_template_methods group.validation, concern_template
-              assert_empty group.validation.condition_methods
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, model_template
+              assert_includes_template_methods validation, concern_template
+              assert_empty validation.condition_methods
             end
           end
         end
@@ -328,11 +328,11 @@ RSpec.describe ASTValidationList do
           it "finds callback" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, concern_template
-              assert_includes_template_methods group.validation, concern_template
-              assert_empty group.validation.condition_methods
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, concern_template
+              assert_includes_template_methods validation, concern_template
+              assert_empty validation.condition_methods
             end
           end
         end
@@ -347,11 +347,11 @@ RSpec.describe ASTValidationList do
           it "finds callback" do
             refute_empty subject
 
-            subject.each do |group|
-              assert_predicate group.validation, :validate_pattern?
-              assert_validation group.validation, concern_template_1
-              assert_includes_template_methods group.validation, concern_template_2
-              assert_empty group.validation.condition_methods
+            subject.each do |validation|
+              assert_predicate validation, :validate_pattern?
+              assert_validation validation, concern_template_1
+              assert_includes_template_methods validation, concern_template_2
+              assert_empty validation.condition_methods
             end
           end
         end
@@ -374,11 +374,11 @@ RSpec.describe ASTValidationList do
         it "finds_callback" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validate_pattern?
-            assert_validation group.validation, child_template
-            assert_includes_template_methods group.validation, parent_template
-            assert_empty group.validation.condition_methods
+          subject.each do |validation|
+            assert_predicate validation, :validate_pattern?
+            assert_validation validation, child_template
+            assert_includes_template_methods validation, parent_template
+            assert_empty validation.condition_methods
           end
         end
       end
@@ -392,27 +392,27 @@ RSpec.describe ASTValidationList do
       it "finds validation" do
         refute_empty subject
 
-        subject.each do |group|
-          assert_predicate group.validation, :validates_each_pattern?
-          assert_validation group.validation, template
-          assert_empty group.validation.methods
-          assert_empty group.validation.condition_methods
+        subject.each do |validation|
+          assert_predicate validation, :validates_each_pattern?
+          assert_validation validation, template
+          assert_empty validation.methods
+          assert_empty validation.condition_methods
         end
       end
     end
 
     describe "when with options" do
-      %i[if unless].each do |condition_key|
-        let(:template) { model_setup :validates_each, options: { condition_key => :alpha } }
+      %i[if unless].each do |condition|
+        let(:template) { model_setup :validates_each, options: { condition => :alpha } }
 
         it "finds validation" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validates_each_pattern?
-            assert_validation group.validation, template
-            assert_empty group.validation.methods
-            assert_includes_template_condition_methods group.validation, template
+          subject.each do |validation|
+            assert_predicate validation, :validates_each_pattern?
+            assert_validation validation, template
+            assert_empty validation.methods
+            assert_includes_template_condition_methods validation, template
           end
         end
       end
@@ -426,27 +426,27 @@ RSpec.describe ASTValidationList do
       it "finds validation" do
         refute_empty subject
 
-        subject.each do |group|
-          assert_predicate group.validation, :validates_with_pattern?
-          assert_validation group.validation, template
-          assert_empty group.validation.methods
-          assert_empty group.validation.condition_methods
+        subject.each do |validation|
+          assert_predicate validation, :validates_with_pattern?
+          assert_validation validation, template
+          assert_empty validation.methods
+          assert_empty validation.condition_methods
         end
       end
     end
 
     describe "when with options" do
-      %i[if unless].each do |condition_key|
-        let(:template) { model_setup :validates_with, options: { condition_key => :alpha } }
+      %i[if unless].each do |condition|
+        let(:template) { model_setup :validates_with, options: { condition => :alpha } }
 
         it "finds validation" do
           refute_empty subject
 
-          subject.each do |group|
-            assert_predicate group.validation, :validates_with_pattern?
-            assert_validation group.validation, template
-            assert_empty group.validation.methods
-            assert_includes_template_condition_methods group.validation, template
+          subject.each do |validation|
+            assert_predicate validation, :validates_with_pattern?
+            assert_validation validation, template
+            assert_empty validation.methods
+            assert_includes_template_condition_methods validation, template
           end
         end
       end

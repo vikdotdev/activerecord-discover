@@ -1,0 +1,30 @@
+class <%= name %> < <%= @parent&.name.presence || "ActiveRecord::Base" %>
+  <% if @includes.present? %>
+    include <%= Array.wrap(@includes).map(&:name).join(', ') %>
+  <% end %>
+
+  <% callback = @callback.presence || :before_validation %>
+  <% options = ", #{@options.inspect_no_parenthesis}" rescue nil %>
+
+  <% if @methods.present? && !@skip_callback %>
+    <% content_for(:callback) do %>
+      <%= callback %> :<%= Array.wrap(@methods).join(', :') %><%= options %>
+    <% end %>
+  <% end %>
+
+  <% if @methods.present? && !@skip_methods %>
+    <% Array.wrap(@methods).each do |method|%>
+      <% content_for("method_#{method}".to_sym) do %>
+        def <%= method %>
+        end
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% condition_methods.each do |method|%>
+    <% content_for("condition_method_#{method}".to_sym) do %>
+      def <%= method %>
+      end
+    <% end %>
+  <% end %>
+end

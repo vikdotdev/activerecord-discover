@@ -1,7 +1,4 @@
 module ActiveRecordDiscover
-  # TODO handle ast_methods that are not found better, current approach does not work?
-  # TODO implement DebugPrinter which will print the usual stuff + debug info about each
-  # entity
   class Printer
     include ConfigurationHelper
     include LineHelper
@@ -9,24 +6,22 @@ module ActiveRecordDiscover
     extend  HighlightHelper
     include PathHelper
 
-    def self.print_all(callback_group_list)
-      puts gray_colored("No callbacks found") if callback_group_list.empty?
+    def self.print_all(entity_list)
+      puts gray_colored(entity_list.not_found_message) if entity_list.empty?
 
-      callback_group_list.each do |callback_group|
-        new(callback_group).format_print
-      end
+      entity_list.each { |entity| new(entity).format_print }
     end
 
-    attr_reader :callback_group
+    attr_reader :entity
 
-    def initialize(callback_group)
-      @callback_group = callback_group
+    def initialize(entity)
+      @entity = entity
     end
 
     def format_print
-      pairs = callback_group.printable_targets.map do |target|
+      pairs = entity.as_printable.map do |target|
         source = unindent_lines_for(target.ast)
-        source = highlight_format_source(source) if colors_enabled? # && source.present?
+        source = highlight_format_source(source) if colors_enabled?
         source = line_number_source(source, target.ast) if line_numbers_enabled?
 
         [source, target]

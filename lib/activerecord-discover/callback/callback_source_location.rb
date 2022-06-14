@@ -17,7 +17,7 @@ module ActiveRecordDiscover
     end
   end
 
-  class CallbackSourceLocation < SourceLocationBase
+  class ClassSourceLocation < SourceLocationBase
     def self.paths(model)
       new(model).paths
     end

@@ -1,5 +1,6 @@
 class ManualValidationValidate < ActiveRecord::Base
-  validate :baz
+  # TODO used for testing non-reachable/non-existant methods
+  # validate :baz
 
   validate :foo
   validate :foo, :bar

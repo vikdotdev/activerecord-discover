@@ -1,12 +1,9 @@
 module ActiveRecordDiscover
   module ASTCallbackPatterns
     CALLBACK_PATTERN = <<-PATTERN.freeze
-      (send nil { #{ActiveRecord::Callbacks::CALLBACKS.join(' ')} }
-        ({ block sym } { _ ...})
-        ?(hash
-          (pair
-            (sym _)
-            ({ sym array block } { _ ... }))))
+      ({ (block (send nil { #{ActiveRecord::Callbacks::CALLBACKS.join(' ')} }))
+         (send nil { #{ActiveRecord::Callbacks::CALLBACKS.join(' ')} }
+           ({ block sym } { _ ...})) })
     PATTERN
     CALLBACK_METHOD_PATTERN = <<-PATTERN.freeze
       (send nil { #{ActiveRecord::Callbacks::CALLBACKS.join(' ')} }

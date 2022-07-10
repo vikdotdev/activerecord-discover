@@ -1,15 +1,34 @@
 class ManualCallbackMethodProcVariants < ActiveRecord::Base
-  # TODO what about -> {} ?
+  after_initialize ->{}
+
+  after_initialize ->{}, if: :alpha
+
   after_initialize -> do
   end
 
-  # TODO next 3 do not work, won't be matched
-  after_initialize do
-  end
+  # TODO test when method is not found, now crashes
+  after_initialize -> do
+  end, if: :alpha
 
   after_initialize :alpha, -> do
   end
 
-  after_initialize :beta do
+  # TODO test when multiple methods, now only first one is displayed
+  after_initialize :alpha, :beta, -> do
+  end
+
+  after_initialize do
+  end
+
+  after_initialize :alpha do
+  end
+
+  after_initialize :alpha, :beta do
+  end
+
+  def alpha
+  end
+
+  def beta
   end
 end

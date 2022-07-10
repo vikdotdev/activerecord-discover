@@ -21,12 +21,12 @@ RSpec.describe ASTCallbackList do
       end
     end
 
-    describe "when no actual callbacks exist, only things resembling callback" do
+    describe 'when no actual callbacks exist, only things resembling callback' do
       let(:template) do
-        model_setup :callback_not_real, callback: :before_custom, methods: :alpha
+        model_setup :callback_not_real, callback: :before_custom, methods: :a
       end
 
-      it "finds no callbacks" do
+      it 'finds no callbacks' do
         assert_kind_of ASTCallbackList, subject
         assert_empty subject
       end
@@ -36,7 +36,7 @@ RSpec.describe ASTCallbackList do
   describe "kind and name permutations" do
     PermutationHelper.callback_pairs.each do |kind, name, combined|
       it "finds a method callback with kind #{kind} and name #{name}" do
-        template = model_setup :callback_method, callback: combined, methods: :alpha
+        template = model_setup :callback_method, callback: combined, methods: :a
         subject = ASTCallbackList.find(template.name.constantize, kind: kind, name: name)
 
         assert_kind_of ASTCallbackList, subject
@@ -55,7 +55,7 @@ RSpec.describe ASTCallbackList do
       end
 
       it "finds a proc callback with kind #{kind} and name #{name}" do
-        template = model_setup :callback_proc, callback: combined, methods: :alpha
+        template = model_setup :callback_proc, callback: combined, methods: :a
         subject = ASTCallbackList.find(template.name.constantize, kind: kind, name: name)
 
         assert_kind_of ASTCallbackList, subject
@@ -76,15 +76,12 @@ RSpec.describe ASTCallbackList do
   end
 
   describe 'conditions' do
-    subject { ASTCallbackList.find(template.name.constantize) }
-
     describe 'single condition with single method' do
-      %i[if unless].each do |condition|
-        let(:template) do
-          model_setup :callback_method, options: { condition => :beta }, methods: :alpha
-        end
+      %i[if unless].each do |c|
+        it "finds callback with condition #{c} and single method" do
+          template = model_setup :callback_method, options: { c => :b }, methods: :a
+          subject = ASTCallbackList.find(template.name.constantize)
 
-        it "finds callback with condition #{condition} and single method" do
           refute_empty subject
 
           subject.each do |callback|
@@ -98,15 +95,12 @@ RSpec.describe ASTCallbackList do
     end
 
     describe 'single condition with multiple methods' do
-      %i[if unless].each do |condition|
-        let(:template) do
-          model_setup :callback_method, methods: :alpha,
-            options: { condition => %i[beta charlie] }
-        end
+      %i[if unless].each do |c|
+        it "finds callback with condition :#{c} and multiple methods" do
+          template = model_setup :callback_method, methods: :a, options: { c => %i[b c] }
+          subject = ASTCallbackList.find(template.name.constantize)
 
-        it "finds callback with condition :#{condition} and multiple methods" do
           refute_empty subject
-
           subject.each do |callback|
             assert_callback callback, template
             assert_predicate callback, :method_pattern?
@@ -118,16 +112,13 @@ RSpec.describe ASTCallbackList do
     end
 
     describe 'multiple conditions with multiple methods' do
-      %i[if unless].permutation.each do |(condition_1, condition_2)|
-        %i[beta charlie].permutation do |(option_method_1, option_method_2)|
-          let(:template) do
-            model_setup :callback_method, methods: :alpha,
-              options: { condition_1 => option_method_1, condition_2 => option_method_2 }
-          end
-
+      %i[if unless].permutation do |(c1, c2)|
+        %i[beta charlie].permutation do |(m1, m2)|
           it 'finds callback with multiple conditions and multiple methods' do
-            refute_empty subject
+            template = model_setup :callback_method, methods: :a, options: { c1 => m1, c2 => m2 }
+            subject = ASTCallbackList.find(template.name.constantize)
 
+            refute_empty subject
             subject.each do |callback|
               assert_callback callback, template
               assert_predicate callback, :method_pattern?
@@ -146,10 +137,10 @@ RSpec.describe ASTCallbackList do
     describe 'when methods are in the model' do
       describe 'and callback is in a concern' do
         let(:concern_template) do
-          concern_setup :callback_method, methods: :alpha, skip_methods: true
+          concern_setup :callback_method, methods: :a, skip_methods: true
         end
         let(:model_template) do
-          model_setup :callback_method, methods: :alpha,
+          model_setup :callback_method, methods: :a,
             includes: concern_template, skip_callback: true
         end
 
@@ -175,10 +166,10 @@ RSpec.describe ASTCallbackList do
     describe 'when method is in the concern' do
       describe 'and callback is in the model' do
         let(:concern_template) do
-          concern_setup :callback_method, methods: :alpha, skip_callback: true
+          concern_setup :callback_method, methods: :a, skip_callback: true
         end
         let(:model_template) do
-          model_setup :callback_method, methods: :alpha,
+          model_setup :callback_method, methods: :a,
             skip_methods: true, includes: concern_template
         end
 
@@ -195,7 +186,7 @@ RSpec.describe ASTCallbackList do
       end
 
       describe 'when callback and method are in the same concern' do
-        let(:concern_template) { concern_setup :callback_method, methods: :alpha }
+        let(:concern_template) { concern_setup :callback_method, methods: :a }
         let(:model_template) { model_setup :empty, includes: concern_template }
 
         it "finds callback" do
@@ -212,10 +203,10 @@ RSpec.describe ASTCallbackList do
 
       describe "and callback is in another included concern" do
         let(:concern_template_methods) do
-          concern_setup :callback_method, methods: :alpha, skip_callback: true
+          concern_setup :callback_method, methods: :a, skip_callback: true
         end
         let(:concern_template_callback) do
-          concern_setup :callback_method, methods: :alpha, skip_methods: true
+          concern_setup :callback_method, methods: :a, skip_methods: true
         end
         let(:model_template) do
           model_setup :empty, includes: [concern_template_callback, concern_template_methods]
@@ -245,9 +236,9 @@ RSpec.describe ASTCallbackList do
     subject { ASTCallbackList.find(child_template.name.constantize) }
 
     describe "when parent has a method, child has a callback" do
-      let(:parent_template) { model_setup :callback_method, methods: :alpha, skip_callback: true }
+      let(:parent_template) { model_setup :callback_method, methods: :a, skip_callback: true }
       let(:child_template) do
-        model_setup :callback_method, methods: :alpha, skip_methods: true, parent: parent_template
+        model_setup :callback_method, methods: :a, skip_methods: true, parent: parent_template
       end
 
       it "finds callback" do

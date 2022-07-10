@@ -7,9 +7,23 @@ module ActiveRecordDiscover
     include PathHelper
 
     def self.print_all(entity_list)
-      puts gray_colored(entity_list.not_found_message) if entity_list.empty?
+      unless entity_list.model.ancestors.include?(ActiveRecord::Base)
+        puts gray_colored("`#{entity_list.model}' is not an ActiveRecord::Base ancestor.")
+        return
+      end
+
+      if entity_list.empty?
+        message = <<~MESSAGE
+          No #{entity_list.class.to_s.split('::').last.to_s
+                .delete_prefix('AST').delete_suffix('List').downcase.pluralize} found
+        MESSAGE
+        puts gray_colored(message)
+        return
+      end
 
       entity_list.each { |entity| new(entity).format_print }
+
+      nil
     end
 
     attr_reader :entity

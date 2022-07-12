@@ -12,7 +12,6 @@ RSpec.describe ASTCallback do
       end
 
       it 'matches when with multiple methods' do
-        skip 'Not implemented'
         assert_predicate build_ast(':a, :b'), :match?
       end
     end
@@ -35,7 +34,6 @@ RSpec.describe ASTCallback do
     end
 
     it 'matches when with non-conditional options' do
-      pending
       assert_predicate build_ast(':a, allow_blank: true'), :match?
       assert_predicate build_ast(':a, allow_nil: false'), :match?
       assert_predicate build_ast(':a, on: :create'), :match?
@@ -45,13 +43,17 @@ RSpec.describe ASTCallback do
 
   describe 'when proc' do
     it 'matches when without options with different proc syntax variants' do
-      pending
       assert_predicate build_ast('->{}'),                :match?
       assert_predicate build_ast('->() {}'),             :match?
       assert_predicate build_ast('->(param) {}'),        :match?
       assert_predicate build_ast("-> do\n  end"),        :match?
       assert_predicate build_ast("do\n  end"),           :match?
       assert_predicate build_ast("->(param) do\n  end"), :match?
+    end
+
+    it 'matches when with multiple procs' do
+      assert_predicate build_ast('->{}, ->{}'),          :match?
+      assert_predicate build_ast("->{}, -> do\n end"),   :match?
     end
 
     describe 'when with arrow syntax variant' do
@@ -66,7 +68,6 @@ RSpec.describe ASTCallback do
       end
 
       it 'matches when with non-conditional options' do
-        pending
         assert_predicate build_ast('->{}, allow_blank: true'), :match?
         assert_predicate build_ast('->{}, allow_nil: false'), :match?
         assert_predicate build_ast('->{}, on: :create'), :match?
@@ -74,8 +75,43 @@ RSpec.describe ASTCallback do
       end
     end
 
-    describe 'when without arrow syntax variant' do
-      pending
+    describe 'when with "do" syntax variant' do
+      describe 'when with arrow' do
+        it 'matches when with non-conditional options' do
+          assert_predicate build_ast("-> do\n end, allow_blank: true"), :match?
+          assert_predicate build_ast("-> do\n end, allow_nil: false"), :match?
+          assert_predicate build_ast("-> do\n end, on: :create"), :match?
+          assert_predicate build_ast("-> do\n end, prepend: true"), :match?
+        end
+
+        it 'matches when with permutation of if and unless' do
+          assert_predicate build_ast("-> do\n end, if: :b, unless: :c"), :match?
+          assert_predicate build_ast("-> do\n end, unless: :b, if: :c"), :match?
+        end
+      end
+
+      describe 'when without arrow' do
+        it 'matches when without options' do
+          assert_predicate build_ast("do\n end"), :match?
+        end
+      end
+    end
+  end
+
+  describe 'when with both method and a proc' do
+    it 'matches without options' do
+      assert_predicate build_ast(':a, ->{}'),                :match?
+      assert_predicate build_ast('->{}, :b'),                :match?
+      assert_predicate build_ast(':a, ->() {}'),             :match?
+      assert_predicate build_ast('->() {}, :b'),             :match?
+      assert_predicate build_ast(':a, ->(param) {}'),        :match?
+      assert_predicate build_ast('->(param) {}, :b'),        :match?
+      assert_predicate build_ast(":a, -> do\n  end"),        :match?
+      assert_predicate build_ast("-> do\n  end, :b"),        :match?
+      assert_predicate build_ast(":a do\n  end"),            :match?
+      assert_predicate build_ast(":a, :b do\n  end"),        :match?
+      assert_predicate build_ast(":a, ->(param) do\n  end"), :match?
+      assert_predicate build_ast("->(param) do\n  end, :b"), :match?
     end
   end
 end

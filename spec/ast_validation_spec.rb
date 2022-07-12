@@ -76,9 +76,13 @@ RSpec.describe ASTValidation do
           validate do
           end
         CODE
-        <<-CODE
+        <<-CODE,
           validate -> do
           end
+        CODE
+        <<-CODE
+          validate -> do
+          end, if: :a
         CODE
       ].each do |syntax_variant|
         it "matches with #{syntax_variant}" do

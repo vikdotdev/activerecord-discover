@@ -31,10 +31,10 @@ module Minitest::Assertions
   def assert_includes_template_methods(entity, template)
     refute_empty entity.methods
 
-    actual_method_asts = entity.methods.map(&:ast).compact
+    actual_method_asts = entity.methods.map(&:ast).compact.map(&:source)
     expected_method_asts = template.methods.map do |method_name|
       template.yield_content("method_#{method_name}".to_sym)&.to_ast
-    end.compact
+    end.compact.map(&:source)
 
     refute_empty actual_method_asts
     refute_empty expected_method_asts
@@ -45,10 +45,10 @@ module Minitest::Assertions
   def assert_includes_template_condition_methods(entity, template)
     refute_empty entity.condition_methods
 
-    actual_method_asts = entity.condition_methods.map(&:ast).compact
+    actual_method_asts = entity.condition_methods.map(&:ast).compact.map(&:source)
     expected_method_asts = template.condition_methods.map do |method_name|
       template.yield_content("condition_method_#{method_name}".to_sym).to_ast
-    end.compact
+    end.compact.map(&:source)
 
     refute_empty actual_method_asts
     refute_empty expected_method_asts

@@ -6,6 +6,6 @@ end
 
 class String
   def to_ast
-    Fast.ast(self)
+    ActiveRecordDiscover::AST.from(self)
   end
 end

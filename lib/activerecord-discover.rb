@@ -2,6 +2,7 @@ require 'fast'
 require 'method_source'
 require 'rouge'
 require 'colorize'
+require 'rubocop-ast'
 
 require_relative 'activerecord-discover/constants'
 require_relative 'activerecord-discover/configuration'
@@ -15,6 +16,7 @@ require_relative 'activerecord-discover/association/association_list'
 
 require_relative 'activerecord-discover/ast_entity_list'
 require_relative 'activerecord-discover/ast_entity'
+require_relative 'activerecord-discover/ast'
 
 require_relative 'activerecord-discover/callback/ast_callback_patterns'
 require_relative 'activerecord-discover/callback/ast_callback_list'

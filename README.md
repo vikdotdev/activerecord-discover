@@ -24,6 +24,7 @@ $ bundle
 ```
 
 ## Roadmap
+- Migrate to a more extensive `rubocop-ast` backend.
 - Add filtering by fields for validations.
 - Add `after_[create|update|destroy]_commit` alias callbacks and related ones.
 - Implement associations.

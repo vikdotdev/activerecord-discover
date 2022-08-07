@@ -1,6 +1,6 @@
 class ManualCallbackMethodProcVariants < ActiveRecord::Base
   after_initialize ->{}
-  after_initialize ->{}, :asdf, ->{}
+  after_initialize ->{}, :alpha, ->{}
 
   after_initialize ->{}, if: :alpha
 

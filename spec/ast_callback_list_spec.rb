@@ -39,6 +39,7 @@ RSpec.describe ASTCallbackList do
         template = model_setup :callback_method, callback: combined, methods: :a
         subject = ASTCallbackList.find(template.name.constantize, kind: kind, name: name)
 
+        # binding.pry
         assert_kind_of ASTCallbackList, subject
         refute_empty subject
         assert_equal kind, subject.kind
@@ -94,9 +95,10 @@ RSpec.describe ASTCallbackList do
       end
     end
 
+    # TODO test for methods with no if and unless keys
     describe 'single condition with multiple methods' do
       %i[if unless].each do |c|
-        it "finds callback with condition :#{c} and multiple methods" do
+        it "finds callback with condition :#{c}" do
           template = model_setup :callback_method, methods: :a, options: { c => %i[b c] }
           subject = ASTCallbackList.find(template.name.constantize)
 
@@ -114,7 +116,7 @@ RSpec.describe ASTCallbackList do
     describe 'multiple conditions with multiple methods' do
       %i[if unless].permutation do |(c1, c2)|
         %i[beta charlie].permutation do |(m1, m2)|
-          it 'finds callback with multiple conditions and multiple methods' do
+          it 'finds callback' do
             template = model_setup :callback_method, methods: :a, options: { c1 => m1, c2 => m2 }
             subject = ASTCallbackList.find(template.name.constantize)
 

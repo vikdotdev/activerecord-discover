@@ -19,16 +19,25 @@ module ActiveRecordDiscover
     #   { (block (send nil? { #{METHODS} }) ...)
     #     (send nil? { #{METHODS} } #has_symbol_or_block_arguments? ) }
     # PATTERN
-    CALLBACK_PATTERN = <<-PATTERN.freeze
-    { (block (send nil? { #{METHODS} } ({ block sym hash } ...) *) ... )
-        (send nil? { #{METHODS} } ({ block sym hash } ...) +) }
+    # CALLBACK_PATTERN = <<-PATTERN.freeze
+    # { (block (send nil? { #{METHODS} } ({ block sym hash } ...) *) ... )
+    #     (send nil? { #{METHODS} } ({ block sym hash } ...) +) }
+    # PATTERN
+    CALLBACK_SEND_PATTERN = <<-PATTERN
+      { (send nil? { #{METHODS} } ...) }
     PATTERN
-    CALLBACK_METHOD_PATTERN = <<-PATTERN.freeze
-      (send nil? { #{METHODS} } $(sym _) + ...)
+    CALLBACK_BLOCK_PATTERN = <<-PATTERN
+      { (block #{CALLBACK_SEND_PATTERN} ... )
     PATTERN
-    CALLBACK_PROC_PATTERN = <<-PATTERN.freeze
-      (send nil? { #{METHODS} } (block ...) ...)
+    CALLBACK_WITH_OPTS_PATTERN = <<-PATTERN
+      { (block (send nil? :with_options ... #{CALLBACK_SEND_PATTERN})) }
     PATTERN
+    # CALLBACK_METHOD_PATTERN = <<-PATTERN.freeze
+    #   (send nil? { #{METHODS} } $(sym _) + { ... })
+    # PATTERN
+    # CALLBACK_PROC_PATTERN = <<-PATTERN.freeze
+    #   (send nil? { #{METHODS} } (block ...) ...)
+    # PATTERN
 
     def method_pattern?
       # Fast.match?(CALLBACK_METHOD_PATTERN, ast)

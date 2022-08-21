@@ -1,46 +1,35 @@
 module ActiveRecordDiscover
   module ASTValidationPatterns
-    PATTERN_VALIDATE = <<-PATTERN.freeze
-      ({ (block (send nil { validate }))
-         (send nil { validate } ({ block sym } _)) })
-    PATTERN
-    PATTERN_VALIDATES = <<-PATTERN.freeze
-      (send nil {
-        validates validates! validates_absence_of validates_acceptance_of
-        validates_associated validates_confirmation_of validates_exclusion_of
-        validates_format_of validates_inclusion_of validates_length_of
-        validates_numericality_of validates_presence_of
-        validates_size_of validates_uniqueness_of })
-    PATTERN
-    PATTERN_VALIDATES_EACH = '(block (send nil { validates_each }))'.freeze
-    PATTERN_VALIDATES_WITH = '(send nil { validates_with })'.freeze
-    PATTERNS = [
-      PATTERN_VALIDATE,
-      PATTERN_VALIDATES,
-      PATTERN_VALIDATES_EACH,
-      PATTERN_VALIDATES_WITH
+    # TODO inline?
+    VALIDATES_METHODS = %w[
+      validates validates! validates_absence_of validates_acceptance_of
+      validates_associated validates_confirmation_of validates_exclusion_of
+      validates_format_of validates_inclusion_of validates_length_of
+      validates_numericality_of validates_presence_of validates_size_of
+      validates_uniqueness_of
     ].freeze
 
-    def validate_pattern?
-      pattern == PATTERN_VALIDATE
+    def validates_pattern
+      "(send nil? { :#{VALIDATES_METHODS.join(' :')} } ...)"
     end
 
-    def validates_pattern?
-      pattern == PATTERN_VALIDATES
+    def validate_pattern
+      '(send nil? { :validate } ...)'
     end
 
-    def validates_each_pattern?
-      pattern == PATTERN_VALIDATES_EACH
+    def validates_each_pattern
+      '(send nil? { :validates_each } ...)'
     end
 
-    def validates_with_pattern?
-      pattern == PATTERN_VALIDATES_WITH
+    def validates_with_pattern
+      '(send nil? { :validates_with } ...)'
     end
 
-    private
-
-    def pattern
-      @pattern ||= PATTERNS.find { |pattern| Fast.match?(pattern, ast) }
+    def send_pattern
+      <<-PATTERN.squish
+        { #{validates_pattern} #{validate_pattern}
+          #{validates_each_pattern} #{validates_with_pattern} }
+      PATTERN
     end
   end
 end

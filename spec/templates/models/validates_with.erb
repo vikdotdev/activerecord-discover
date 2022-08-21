@@ -12,7 +12,7 @@ class <%= name %> < ActiveRecord::Base
     validates_with <%= validators.join(', ') %><%= options %>
   <% end %>
 
-  <% condition_methods.each do |method|%>
+  <% hash_methods.each do |method|%>
     <% content_for("condition_method_#{method}".to_sym) do %>
       def <%= method %>
       end

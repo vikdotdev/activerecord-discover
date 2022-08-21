@@ -35,28 +35,25 @@ module Minitest::Assertions
     ERROR
   end
 
-  def assert_includes_template_methods(entity, template)
-    binding.pry
-    refute_empty entity.methods
+  def assert_includes_template_argument_methods(entity, template)
+    refute_empty entity.argument_methods
 
-    actual_method_asts = entity.methods.map(&:ast).compact.map(&:source)
-    expected_method_asts = template.methods.map do |method_name|
+    actual_method_asts = entity.argument_methods.map(&:ast).compact.map(&:source)
+    expected_method_asts = template.argument_methods.map do |method_name|
       template.yield_content("method_#{method_name}".to_sym)&.to_ast
     end.compact.map(&:source)
 
-    binding.pry
     refute_empty actual_method_asts
     refute_empty expected_method_asts
 
     assert_same_elements actual_method_asts, expected_method_asts
   end
 
-  def assert_includes_template_condition_methods(entity, template)
-    refute_empty entity.condition_methods
+  def assert_includes_template_hash_methods(entity, template)
+    refute_empty entity.hash_methods
 
-    # binding.pry
-    actual_method_asts = entity.condition_methods.map(&:ast).compact.map(&:source)
-    expected_method_asts = template.condition_methods.map do |method_name|
+    actual_method_asts = entity.hash_methods.map(&:ast).compact.map(&:source)
+    expected_method_asts = template.hash_methods.map do |method_name|
       template.yield_content("condition_method_#{method_name}".to_sym).to_ast
     end.compact.map(&:source)
 

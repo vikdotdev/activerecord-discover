@@ -16,6 +16,10 @@ class ASTR
     # similar to https://docs.rubocop.org/rubocop-ast/node_pattern.html
   end
 
+  def self.from(string)
+    RuboCop::AST::ProcessedSource.new(string, RUBY_VERSION.to_f).ast
+  end
+
   def self.search_path(pattern, path)
     ast = from_path(path)
 
@@ -93,11 +97,16 @@ alias :wop :with_options_pattern
 
 def match?(pattern, code)
   ast = ASTR.from(code)
-  puts ast
-  puts
-  puts pattern
+  matches = ASTR.pattern(pattern).match(ast)
 
-  ASTR.pattern(pattern).match(ast)
+  puts '=============='
+  puts 'CODE'
+  puts code
+  puts
+  puts 'PATTERN'
+  puts pattern
+  puts
+  puts "MATCH? #{matches}"
 end
 
 puts [
@@ -106,7 +115,6 @@ puts [
   (match? wop { sdp }, wo1),
   (match? wop { bkp }, wo2)
 ].all?
-binding.pry
 
 puts
 puts 'done'

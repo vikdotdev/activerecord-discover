@@ -1,5 +1,11 @@
 module ActiveRecordDiscover
   class AST
+    attr_reader :node
+
+    def self.match?(pattern, ast)
+      self.pattern(pattern).match(ast)
+    end
+
     def self.from(string)
       RuboCop::AST::ProcessedSource.new(string, RUBY_VERSION.to_f).ast
     end

@@ -13,17 +13,25 @@ require_relative 'activerecord-discover/helpers/line_number_helper'
 
 require_relative 'activerecord-discover/association/association_list'
 
+require_relative 'activerecord-discover/method/ast_method'
+require_relative 'activerecord-discover/method/argument_method_extractor'
+require_relative 'activerecord-discover/method/hash_method_extractor'
+
 require_relative 'activerecord-discover/ast_entity_list'
+require_relative 'activerecord-discover/entity_patterns'
 require_relative 'activerecord-discover/ast_entity'
+require_relative 'activerecord-discover/entity_matcher'
+require_relative 'activerecord-discover/entity_builder'
 require_relative 'activerecord-discover/ast'
 
 require_relative 'activerecord-discover/callback/ast_callback_patterns'
+require_relative 'activerecord-discover/callback/callback_matcher'
 require_relative 'activerecord-discover/callback/ast_callback_list'
 require_relative 'activerecord-discover/callback/ast_callback'
-require_relative 'activerecord-discover/callback/ast_method'
 require_relative 'activerecord-discover/callback/callback_source_location'
 
 require_relative 'activerecord-discover/validation/ast_validation_patterns'
+require_relative 'activerecord-discover/validation/validation_matcher'
 require_relative 'activerecord-discover/validation/ast_validation'
 require_relative 'activerecord-discover/validation/ast_validation_list'
 

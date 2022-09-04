@@ -10,6 +10,7 @@ class ManualValidationValidates < ActiveRecord::Base
   validates :name, uniqueness: true
   validates_presence_of :name
   validates_presence_of :name, if: :foo, unless: [:bar, :foo]
+  # TODO add more variants
 
   def foo
   end

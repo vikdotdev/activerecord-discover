@@ -1,62 +1,48 @@
 module ActiveRecordDiscover
+
+  # TODO rename all these ? to exclude AST
   class ASTCallback < ASTEntity
-    include ASTCallbackPatterns
-    extend ASTCallbackPatterns
 
     def self.from_path(path, model)
-      Fast.search_file(CALLBACK_PATTERN, path).map do |ast|
-        ast_callback = new(ast, model)
-        matches = yield(ast_callback) if block_given?
+      EntityBuilder.new(AST.from_path(path), CallbackMatcher).call.map do |node|
+        callback = new(node, model)
+
+        # TODO add aliases and test them aswell
+        next unless callback.callback_method_name.to_sym.in? ActiveRecord::Callbacks::CALLBACKS
+
+        matches = yield(callback) if block_given?
 
         next unless matches
 
-        ast_callback
-      end.compact.uniq
+        callback
+      end.compact.uniq.sort
     end
 
-    def match?
-      Fast.match?(CALLBACK_PATTERN, ast)
-    end
-
-    def methods
-      return [] unless method_pattern?
-
-      Fast.capture(CALLBACK_METHOD_PATTERN, ast).map do |method_name|
-        ASTMethod.from(model, by_name: method_name)
+    def argument_methods
+      ArgumentMethodExtractor.new(send_node).call.map do |name|
+        ASTMethod.from(model, by_name: name)
       end
     end
 
-    def condition_methods
-      conditions_method_names.map do |method_name|
-        ASTMethod.from(model, by_name: method_name)
+    def hash_methods
+      HashMethodExtractor.new(send_node).call.map do |name|
+        ASTMethod.from(model, by_name: name)
       end.uniq(&:ast)
     end
 
+    # TODO find a better way to extract this
+    # this also breaks block types from showing up in the list
+    # now fixed - add tests for regular block types
     def name
-      callback_symbol.split('_').second.to_s
+      callback_method_name.split('_').second.to_s
     end
 
     def kind
-      callback_symbol.split('_').first.to_s
+      callback_method_name.split('_').first.to_s
     end
 
-    private
-
-    def callback_symbol
-      Fast.capture('(send nil $_)', ast).first.to_s
+    def callback_method_name
+      send_node.children.second.to_s
     end
-
-    def conditions_method_names
-      Fast.capture('$(hash ...)', ast).map do |node|
-        node.children.map do |child|
-          key_ast, conditions_ast = child.children
-
-          if Fast.match?('(sym { if unless })', key_ast) && conditions = Fast.capture('(sym $_)', conditions_ast)
-            conditions
-          end
-        end
-      end.flatten.compact
-    end
-
   end
 end

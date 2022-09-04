@@ -18,7 +18,7 @@ class <%= name %> < <%= @parent&.name.presence || "ActiveRecord::Base" %>
     <% end %>
   <% end %>
 
-  <% condition_methods.each do |method|%>
+  <% hash_methods.each do |method|%>
     <% content_for("condition_method_#{method}") do %>
       def <%= method %>
       end

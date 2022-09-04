@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe ASTValidation do
+  def ast(string)
+    described_class.new(string.to_ast, dummy_model)
+  end
+
   describe "when with validates" do
     describe "when no options" do
       [
@@ -30,8 +34,8 @@ RSpec.describe ASTValidation do
         'validates :field, numericality: { only_integer: true }',
         'validates :field, :field_2, presence: true'
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          assert_predicate described_class.new(syntax_variant.to_ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -50,8 +54,8 @@ RSpec.describe ASTValidation do
         'validates_presence_of :field, if: :example',
         'validates :example, example_2, presence: true'
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          assert_predicate described_class.new(syntax_variant.to_ast, dummy_model), :match?
+        it "matches with '#{syntax_variant.squish}'" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -60,10 +64,8 @@ RSpec.describe ASTValidation do
   describe "when with validate" do
     describe "when with a method" do
       ["validate :example", "validate :example, :example_2"].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -85,10 +87,8 @@ RSpec.describe ASTValidation do
           end, if: :a
         CODE
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -113,10 +113,8 @@ RSpec.describe ASTValidation do
           end, :example
         CODE
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -134,10 +132,8 @@ RSpec.describe ASTValidation do
           end
         CODE
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -177,10 +173,8 @@ RSpec.describe ASTValidation do
           end
         CODE
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -189,10 +183,8 @@ RSpec.describe ASTValidation do
   describe 'when with validates_with' do
     describe 'when with no options' do
       ['validates_with Example', 'validates_with Example, Example2'].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with #{syntax_variant.squish}" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end
@@ -208,10 +200,8 @@ RSpec.describe ASTValidation do
         'validates_with Example, if: ->{}, unless: ->{}',
         'validates_with Example, if: [->{}, :example], unless: [->{}, :example]'
       ].each do |syntax_variant|
-        it "matches with #{syntax_variant}" do
-          ast = syntax_variant.to_ast
-
-          assert_predicate described_class.new(ast, dummy_model), :match?
+        it "matches with '#{syntax_variant.squish}'" do
+          assert_ast ast(syntax_variant), syntax_variant
         end
       end
     end

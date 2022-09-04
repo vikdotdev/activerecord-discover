@@ -5,7 +5,7 @@ class <%= name %> < ActiveRecord::Base
     validates :name, :age <%= options %>
   <% end %>
 
-  <% condition_methods.each do |method|%>
+  <% hash_methods.each do |method|%>
     <% content_for("condition_method_#{method}".to_sym) do %>
       def <%= method %>
       end

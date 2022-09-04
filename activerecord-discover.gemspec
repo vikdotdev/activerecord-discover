@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7'
 
   spec.add_dependency "rails"
-  spec.add_dependency "ffast", "0.2.0"
+  spec.add_dependency "rubocop-ast", "0.2.0"
   spec.add_dependency "rouge", "~> 3"
   spec.add_dependency "colorize"
   spec.add_dependency "method_source"

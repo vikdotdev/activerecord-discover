@@ -39,6 +39,7 @@ RSpec.describe ASTCallbackList do
         template = model_setup :callback_method, callback: combined, methods: :a
         subject = ASTCallbackList.find(template.name.constantize, kind: kind, name: name)
 
+        # binding.pry
         assert_kind_of ASTCallbackList, subject
         refute_empty subject
         assert_equal kind, subject.kind
@@ -46,11 +47,10 @@ RSpec.describe ASTCallbackList do
 
         subject.each do |callback|
           assert_callback callback, template
-          assert_predicate callback, :method_pattern?
           assert_equal kind.to_s, callback.kind
           assert_equal name.to_s, callback.name
-          assert_includes_template_methods callback, template
-          assert_empty callback.condition_methods
+          assert_includes_template_argument_methods callback, template
+          assert_empty callback.hash_methods
         end
       end
 
@@ -65,11 +65,10 @@ RSpec.describe ASTCallbackList do
 
         subject.each do |callback|
           assert_callback callback, template
-          assert_predicate callback, :proc_pattern?
           assert_equal kind.to_s, callback.kind
           assert_equal name.to_s, callback.name
-          assert_empty callback.methods
-          assert_empty callback.condition_methods
+          assert_empty callback.argument_methods
+          assert_empty callback.hash_methods
         end
       end
     end
@@ -86,26 +85,25 @@ RSpec.describe ASTCallbackList do
 
           subject.each do |callback|
             assert_callback callback, template
-            assert_predicate callback, :method_pattern?
-            assert_includes_template_methods callback, template
-            assert_includes_template_condition_methods callback, template
+            assert_includes_template_argument_methods callback, template
+            assert_includes_template_hash_methods callback, template
           end
         end
       end
     end
 
+    # TODO test for methods with no if and unless keys
     describe 'single condition with multiple methods' do
       %i[if unless].each do |c|
-        it "finds callback with condition :#{c} and multiple methods" do
+        it "finds callback with condition :#{c}" do
           template = model_setup :callback_method, methods: :a, options: { c => %i[b c] }
           subject = ASTCallbackList.find(template.name.constantize)
 
           refute_empty subject
           subject.each do |callback|
             assert_callback callback, template
-            assert_predicate callback, :method_pattern?
-            assert_includes_template_methods callback, template
-            assert_includes_template_condition_methods callback, template
+            assert_includes_template_argument_methods callback, template
+            assert_includes_template_hash_methods callback, template
           end
         end
       end
@@ -114,16 +112,15 @@ RSpec.describe ASTCallbackList do
     describe 'multiple conditions with multiple methods' do
       %i[if unless].permutation do |(c1, c2)|
         %i[beta charlie].permutation do |(m1, m2)|
-          it 'finds callback with multiple conditions and multiple methods' do
+          it 'finds callback' do
             template = model_setup :callback_method, methods: :a, options: { c1 => m1, c2 => m2 }
             subject = ASTCallbackList.find(template.name.constantize)
 
             refute_empty subject
             subject.each do |callback|
               assert_callback callback, template
-              assert_predicate callback, :method_pattern?
-              assert_includes_template_methods callback, template
-              assert_includes_template_condition_methods callback, template
+              assert_includes_template_argument_methods callback, template
+              assert_includes_template_hash_methods callback, template
             end
           end
         end
@@ -148,10 +145,9 @@ RSpec.describe ASTCallbackList do
           refute_empty subject
 
           subject.each do |callback|
-            assert_predicate callback, :method_pattern?
             assert_callback callback, concern_template
-            assert_includes_template_methods callback, model_template
-            assert_empty callback.condition_methods
+            assert_includes_template_argument_methods callback, model_template
+            assert_empty callback.hash_methods
           end
         end
       end
@@ -177,10 +173,9 @@ RSpec.describe ASTCallbackList do
           refute_empty subject
 
           subject.each do |callback|
-            assert_predicate callback, :method_pattern?
             assert_callback callback, model_template
-            assert_includes_template_methods callback, concern_template
-            assert_empty callback.condition_methods
+            assert_includes_template_argument_methods callback, concern_template
+            assert_empty callback.hash_methods
           end
         end
       end
@@ -193,10 +188,9 @@ RSpec.describe ASTCallbackList do
           refute_empty subject
 
           subject.each do |callback|
-            assert_predicate callback, :method_pattern?
             assert_callback callback, concern_template
-            assert_includes_template_methods callback, concern_template
-            assert_empty callback.condition_methods
+            assert_includes_template_argument_methods callback, concern_template
+            assert_empty callback.hash_methods
           end
         end
       end
@@ -216,10 +210,9 @@ RSpec.describe ASTCallbackList do
           refute_empty subject
 
           subject.each do |callback|
-            assert_predicate callback, :method_pattern?
             assert_callback callback, concern_template_callback
-            assert_includes_template_methods callback, concern_template_methods
-            assert_empty callback.condition_methods
+            assert_includes_template_argument_methods callback, concern_template_methods
+            assert_empty callback.hash_methods
           end
         end
       end
@@ -246,9 +239,8 @@ RSpec.describe ASTCallbackList do
 
         subject.each do |callback|
           assert_callback callback, child_template
-          assert_predicate callback, :method_pattern?
-          assert_includes_template_methods callback, parent_template
-          assert_empty callback.condition_methods
+          assert_includes_template_argument_methods callback, parent_template
+          assert_empty callback.hash_methods
         end
       end
     end

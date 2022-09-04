@@ -42,11 +42,11 @@ class BaseTemplate
     raise NotImplemented
   end
 
-  def methods
+  def argument_methods
     Array.wrap @methods
   end
 
-  def condition_methods
+  def hash_methods
     (@options || {}).select { |k, _v| %i[if unless].include?(k) }.map { |_k, v| v }.flatten
   end
 

@@ -34,10 +34,9 @@ RSpec.describe ASTValidationList do
         refute_empty subject
 
         subject.each do |validation|
-          assert_predicate validation, :validates_pattern?
           assert_validation validation, template
-          assert_empty validation.methods
-          assert_empty validation.condition_methods
+          assert_empty validation.argument_methods
+          assert_empty validation.hash_methods
         end
       end
     end
@@ -51,10 +50,9 @@ RSpec.describe ASTValidationList do
 
             refute_empty subject
             subject.each do |validation|
-              assert_predicate validation, :validates_pattern?
               assert_validation validation, template
-              assert_empty validation.methods
-              assert_includes_template_condition_methods validation, template
+              assert_empty validation.argument_methods
+              assert_includes_template_hash_methods validation, template
             end
           end
         end
@@ -69,10 +67,9 @@ RSpec.describe ASTValidationList do
 
           refute_empty subject
           subject.each do |validation|
-            assert_predicate validation, :validates_pattern?
             assert_validation validation, template
-            assert_empty validation.methods
-            assert_includes_template_condition_methods validation, template
+            assert_empty validation.argument_methods
+            assert_includes_template_hash_methods validation, template
           end
         end
       end
@@ -87,10 +84,9 @@ RSpec.describe ASTValidationList do
 
             refute_empty subject
             subject.each do |validation|
-              assert_predicate validation, :validates_pattern?
               assert_validation validation, template
-              assert_empty validation.methods
-              assert_includes_template_condition_methods validation, template
+              assert_empty validation.argument_methods
+              assert_includes_template_hash_methods validation, template
             end
           end
         end
@@ -107,10 +103,9 @@ RSpec.describe ASTValidationList do
           refute_empty subject
 
           subject.each do |validation|
-            assert_predicate validation, :validate_pattern?
             assert_validation validation, template
-            assert_includes_template_methods validation, template
-            assert_empty validation.condition_methods
+            assert_includes_template_argument_methods validation, template
+            assert_empty validation.hash_methods
           end
         end
       end
@@ -124,10 +119,9 @@ RSpec.describe ASTValidationList do
 
               refute_empty subject
               subject.each do |validation|
-                assert_predicate validation, :validate_pattern?
                 assert_validation validation, template
-                assert_includes_template_methods validation, template
-                assert_includes_template_condition_methods validation, template
+                assert_includes_template_argument_methods validation, template
+                assert_includes_template_hash_methods validation, template
               end
             end
           end
@@ -141,10 +135,9 @@ RSpec.describe ASTValidationList do
 
               refute_empty subject
               subject.each do |validation|
-                assert_predicate validation, :validate_pattern?
                 assert_validation validation, template
-                assert_includes_template_methods validation, template
-                assert_includes_template_condition_methods validation, template
+                assert_includes_template_argument_methods validation, template
+                assert_includes_template_hash_methods validation, template
               end
             end
           end
@@ -160,10 +153,9 @@ RSpec.describe ASTValidationList do
                 refute_empty subject
 
                 subject.each do |validation|
-                  assert_predicate validation, :validate_pattern?
                   assert_validation validation, template
-                  assert_includes_template_methods validation, template
-                  assert_includes_template_condition_methods validation, template
+                  assert_includes_template_argument_methods validation, template
+                  assert_includes_template_hash_methods validation, template
                 end
               end
             end
@@ -179,26 +171,27 @@ RSpec.describe ASTValidationList do
         refute_empty subject
 
         subject.each do |validation|
-          assert_predicate validation, :validate_pattern?
           assert_validation validation, template
-          assert_includes_template_methods validation, template
-          assert_empty validation.condition_methods
+          assert_includes_template_argument_methods validation, template
+          assert_empty validation.hash_methods
         end
       end
     end
 
     describe "when with a proc" do
       describe "when no options" do
+        # TODO add test multiple procs one after another, first should
+        # not break the last
+
         let(:template) { model_setup :validate_proc }
 
         it "finds validation" do
           refute_empty subject
 
           subject.each do |validation|
-            assert_predicate validation, :validate_pattern?
             assert_validation validation, template
-            assert_empty validation.methods
-            assert_empty validation.condition_methods
+            assert_empty validation.argument_methods
+            assert_empty validation.hash_methods
           end
         end
       end
@@ -211,10 +204,9 @@ RSpec.describe ASTValidationList do
 
             refute_empty subject
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, template
-              assert_empty validation.methods
-              assert_includes_template_condition_methods validation, template
+              assert_empty validation.argument_methods
+              assert_includes_template_hash_methods validation, template
             end
           end
         end
@@ -229,14 +221,14 @@ RSpec.describe ASTValidationList do
           refute_empty subject
 
           subject.each do |validation|
-            assert_predicate validation, :validate_pattern?
             assert_validation validation, template
-            assert_includes_template_methods validation, template
-            assert_empty validation.condition_methods
+            assert_includes_template_argument_methods validation, template
+            assert_empty validation.hash_methods
           end
         end
       end
 
+      # TODO add same spec for callbacks?
       describe "when with options" do
         %i[if unless].each do |c|
           it "finds validation with condition #{c}" do
@@ -245,11 +237,12 @@ RSpec.describe ASTValidationList do
 
             refute_empty subject
 
+            assert_equal subject.count, 1
+
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, template
-              assert_includes_template_methods validation, template
-              assert_includes_template_condition_methods validation, template
+              assert_includes_template_argument_methods validation, template
+              assert_includes_template_hash_methods validation, template
             end
           end
         end
@@ -272,10 +265,9 @@ RSpec.describe ASTValidationList do
             refute_empty subject
 
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, concern_template
-              assert_includes_template_methods validation, model_template
-              assert_empty validation.condition_methods
+              assert_includes_template_argument_methods validation, model_template
+              assert_empty validation.hash_methods
             end
           end
         end
@@ -298,10 +290,9 @@ RSpec.describe ASTValidationList do
             refute_empty subject
 
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, model_template
-              assert_includes_template_methods validation, concern_template
-              assert_empty validation.condition_methods
+              assert_includes_template_argument_methods validation, concern_template
+              assert_empty validation.hash_methods
             end
           end
         end
@@ -316,10 +307,9 @@ RSpec.describe ASTValidationList do
             refute_empty subject
 
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, concern_template
-              assert_includes_template_methods validation, concern_template
-              assert_empty validation.condition_methods
+              assert_includes_template_argument_methods validation, concern_template
+              assert_empty validation.hash_methods
             end
           end
         end
@@ -335,10 +325,9 @@ RSpec.describe ASTValidationList do
             refute_empty subject
 
             subject.each do |validation|
-              assert_predicate validation, :validate_pattern?
               assert_validation validation, concern_template_1
-              assert_includes_template_methods validation, concern_template_2
-              assert_empty validation.condition_methods
+              assert_includes_template_argument_methods validation, concern_template_2
+              assert_empty validation.hash_methods
             end
           end
         end
@@ -362,10 +351,9 @@ RSpec.describe ASTValidationList do
           refute_empty subject
 
           subject.each do |validation|
-            assert_predicate validation, :validate_pattern?
             assert_validation validation, child_template
-            assert_includes_template_methods validation, parent_template
-            assert_empty validation.condition_methods
+            assert_includes_template_argument_methods validation, parent_template
+            assert_empty validation.hash_methods
           end
         end
       end
@@ -380,10 +368,9 @@ RSpec.describe ASTValidationList do
         refute_empty subject
 
         subject.each do |validation|
-          assert_predicate validation, :validates_each_pattern?
           assert_validation validation, template
-          assert_empty validation.methods
-          assert_empty validation.condition_methods
+          assert_empty validation.argument_methods
+          assert_empty validation.hash_methods
         end
       end
     end
@@ -396,10 +383,9 @@ RSpec.describe ASTValidationList do
 
           refute_empty subject
           subject.each do |validation|
-            assert_predicate validation, :validates_each_pattern?
             assert_validation validation, template
-            assert_empty validation.methods
-            assert_includes_template_condition_methods validation, template
+            assert_empty validation.argument_methods
+            assert_includes_template_hash_methods validation, template
           end
         end
       end
@@ -414,10 +400,9 @@ RSpec.describe ASTValidationList do
         refute_empty subject
 
         subject.each do |validation|
-          assert_predicate validation, :validates_with_pattern?
           assert_validation validation, template
-          assert_empty validation.methods
-          assert_empty validation.condition_methods
+          assert_empty validation.argument_methods
+          assert_empty validation.hash_methods
         end
       end
     end
@@ -430,10 +415,9 @@ RSpec.describe ASTValidationList do
 
           refute_empty subject
           subject.each do |validation|
-            assert_predicate validation, :validates_with_pattern?
             assert_validation validation, template
-            assert_empty validation.methods
-            assert_includes_template_condition_methods validation, template
+            assert_empty validation.argument_methods
+            assert_includes_template_hash_methods validation, template
           end
         end
       end

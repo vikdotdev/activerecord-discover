@@ -33,7 +33,7 @@ module ActiveRecordDiscover
     end
 
     def format_print
-      pairs = entity.as_printable.map do |target|
+      pairs = entity.printables.map do |target|
         source = unindent_lines_for(target.ast)
         source = highlight_format_source(source) if colors_enabled?
         source = line_number_source(source, target.ast) if line_numbers_enabled?
